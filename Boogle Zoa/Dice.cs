@@ -5,10 +5,10 @@
     {
         #region Attributes 
 
-        char[] letters;
-        char visibleLetter;
+        private char[] letters;
+        private char visibleLetter;
 
-        static Dictionary<char, int> usedLetters = new Dictionary<char, int>
+        private static Dictionary<char, int> usedLetters = new Dictionary<char, int>
         {
             { 'A', 0 }, { 'B', 0 }, { 'C', 0 }, { 'D', 0 }, { 'E', 0 },
             { 'F', 0 }, { 'G', 0 }, { 'H', 0 }, { 'I', 0 }, { 'J', 0 },

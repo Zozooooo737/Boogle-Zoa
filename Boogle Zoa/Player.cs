@@ -4,9 +4,10 @@
     {
         #region Attributes
 
-        string name;
-        int score;
-        List<string> wordsFound;
+        private string name;
+        private int score;
+        private List<string> wordsFound;
+
         #endregion
 
 
