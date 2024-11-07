@@ -11,6 +11,7 @@ namespace Boogle_Zoa
         private Dice[] dices;
         private char[] visibleLetters;
         private const int size = 16;
+        private const int side = sqrt(size);
 
         public GameBoard(Dice[] d)
         {
@@ -25,7 +26,6 @@ namespace Boogle_Zoa
         {
             string description = "";
 
-            int side = sqrt(size);
             int n = 0;
 
             for (int i = 0; i < side; i++)
@@ -42,7 +42,21 @@ namespace Boogle_Zoa
 
         public bool GameBoard_Test(string mot)
         {
+            bool adja = false;
+            char[,] Board = new int[side, side];
+            int n = 0;
+            for (int i = 0; i < side; i++)
+            {
+                for (int j = 0; j < side; j++)
+                {
+                    Board[i,j] = visibleLetters[n];
+                    n++;
+                }
+            }
+
 
         }
+
+        public bool Adjacent(string mot, char lettre)
     }
 }
