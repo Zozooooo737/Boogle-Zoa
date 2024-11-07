@@ -6,6 +6,11 @@
         private string language;
 
         private Dictionary<int, int> wordsBySize;
+        private Dictionary<char, int> wordByLetter;
 
+        public DictionaryWords(Fichier dico)
+        {
+
+        }
     }
 }
