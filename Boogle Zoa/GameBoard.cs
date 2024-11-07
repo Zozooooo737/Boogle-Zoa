@@ -40,7 +40,7 @@ namespace Boogle_Zoa
             return description;
         }
 
-        public bool GameBoard_Test(string mot)
+        public bool GameBoard_Test(string word, DictionaryWords dico)
         {
             bool adja = false;
             char[,] Board = new int[side, side];
@@ -53,10 +53,24 @@ namespace Boogle_Zoa
                     n++;
                 }
             }
-
+            if (Adjacent == true)
+            {
+                //if (mot est daans dico){ adja = true; }
+            }
+            return eligible;
 
         }
 
-        public bool Adjacent(string mot, char lettre)
+        public int FindWord(string word, char[,] board, int index=0, int row, int column)
+        {
+            if (word[word.length] == board[i,j])
+            {
+                return 1;
+            }
+            else if (word[index] == board[i, j])
+            {
+                return FindWord(word, board, index+1, row-1, column+1) + FindWord(word, board, index + 1, row - 1, column + 1);
+            }
+        }
     }
 }
