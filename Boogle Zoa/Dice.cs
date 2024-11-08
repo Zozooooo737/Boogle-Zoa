@@ -37,7 +37,7 @@
                     n = r.Next(alphabet.Count);  // n est un indice aléatoire entre 0 et 25
                     letters[i] = alphabet.ElementAt(n).Key;  // On ajoute la lettre à la face i du dé
                 }
-                while (usedLetters[letters[i]] < alphabet[letters[i]][1]);  // On vérifie que la lettre ajouté sur la face a le droit d'être utiliser en comparant le fichier et son historique
+                while (usedLetters[letters[i]] >= alphabet[letters[i]][1]);  // On vérifie que la lettre ajouté sur la face a le droit d'être utiliser en comparant le fichier et son historique
             }
 
             Roll(r);
@@ -66,6 +66,7 @@
             usedLetters[letters[n]] += 1;
 
         }
+
 
         public string toString()
         {
