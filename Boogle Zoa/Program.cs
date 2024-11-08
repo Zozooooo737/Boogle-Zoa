@@ -60,6 +60,8 @@
             Board B = new Board(listOfDice);
 
             Console.WriteLine(B.toString());
+
+            DictionaryWords Dico = new DictionaryWords("../../../data/MotsPossiblesFR.txt", "FR");
         }
     }
 }
