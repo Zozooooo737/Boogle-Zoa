@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un joueur qui dispose d'un nom (<see cref="name"/>) ainsi que d'un score (<see cref="score"/>) et d'une liste des mots qui l'a trouvés (<see cref="wordsFound"/>), respectivement initialisé à 0 et par une liste vide.
     /// </summary>
-    internal class Player
+    public class Player
     {
         private string name;
         private int score;
@@ -25,11 +25,29 @@
 
 
         /// <summary>
-        /// Renvoie le (<see cref="score"/>) du Joueur.
+        /// Renvoie le nom (<see cref="name"/>) du Joueur.
+        /// </summary>
+        public string Name
+        {
+            get { return name; }
+        }
+
+
+        /// <summary>
+        /// Renvoie le score (<see cref="score"/>) du Joueur.
         /// </summary>
         public int Score
         {
             get { return score; }
+        }
+
+
+        /// <summary>
+        /// Renvoie la liste des mots trouvés (<see cref="wordsFound"/>) du Joueur.
+        /// </summary>
+        public List<string> WordsFound
+        {
+            get { return wordsFound; }
         }
 
 
@@ -42,6 +60,7 @@
         /// </returns>
         public bool Contain(string word)
         {
+            word = word.ToUpper();
             return wordsFound.Contains(word);
         }
 
@@ -58,13 +77,14 @@
         /// </remarks>
         public void AddWord(string word, Dictionary<char, int[]> lettersInformation)
         {
+            word = word.ToUpper();
             if (!Contain(word))
             {
                 wordsFound.Add(word);
                    
                 foreach(char c in word)
                 {
-                    score += lettersInformation[word[c]][0];
+                    score += lettersInformation[c][0];
                 }
             }
         }
