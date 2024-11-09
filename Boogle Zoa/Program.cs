@@ -62,6 +62,10 @@
             Console.WriteLine(B.toString());
 
             DictionaryWords Dico = new DictionaryWords("../../../data/MotsPossiblesFR.txt", "FR");
+
+            Console.WriteLine(Dico.toString());
+
+            Console.WriteLine(Dico.RechDichoRecursif("Table"));
         }
     }
 }

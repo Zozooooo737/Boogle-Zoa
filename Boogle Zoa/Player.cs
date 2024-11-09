@@ -4,60 +4,70 @@
     {
         #region Attributes
 
-        private string name;
-        private int score;
-        private List<string> wordsFound;
+        private string name;                            // Nom du Joueur.
+        private int score;                              // Score du Joueur.
+        private List<string> wordsFound;                // Liste des mots trouvées par le Joueur.
 
-        #endregion
+        #endregion Attributes
 
 
         #region Constructor
 
-        public Player(string n)
+        public Player(string n)                         // Paramètre : Nom du Joueur.
         {
             this.name = n;
-            score = 0;
-            wordsFound = new List<string>();
+            score = 0;                                  // On initialise son score à 0.
+            wordsFound = new List<string>() { };        // On initialise sa liste de mot avec une List vide.
         }
 
-        #endregion
+        #endregion Constructor
 
 
         #region Properties
 
-        public int Score
+        public int Score                                // Propriété à revoir, pas encore utilisé.
         {
             get { return score; }
         }
 
-        #endregion
+        #endregion Properties
 
 
         #region Methods
 
-        public bool Contain(string w)
+        public bool Contain(string w)                   // Méthode qui regarde si le mot w est présent dans la liste des mots trouvés par le Joueur.
         {
             return wordsFound.Contains(w);
         }
 
 
-        public void AddWord(string w)
+        public void AddWord(string w, Dictionary<char, int[]> lettersInformation)          // Méthode qui prends en paramètres un mot et les informations concernant les lettres (nombre, poids).
         {
-            wordsFound.Add(w); // Verifier dans le main que le mot n'est pas deja dans la liste de mots trouvée par le joueur
-            score += w.Length;
+            if (!Contain(w))                            // On vérifie que le mot n'est pas déjà présent dans la liste des mots trouvés par le Joueur
+            {
+                wordsFound.Add(w);                      // On ajoute ce mot dans sa liste /!\ On considère que le mot est présent dans le dictionnaire, à revoir
+                   
+                foreach(char c in w)
+                {
+                    score += lettersInformation[w[c]][0];                                  // Grâce à lettersInformations, on obtient le poids de chaque lettre, qu'on ajoute au score du Joueur.
+                }
+            }
         }
 
 
-        public string toString()
+        public string toString()                        // Méthode qui renvoie la description du Joueur.
         {
-            string description = $"Joueur : {name} \nScore : {score} \nMots trouvés : ";
+            string description = $"Joueur : {name} \n" +                                   // On utilise l'interpolation de chaînes pour faciliter l'insertion des attributs dans le string
+                                 $"Score : {score} \n" +
+                                  "Mots trouvés : ";
+
             foreach (string mot in wordsFound)
             {
-                description += mot + " ";
+                description += mot + " ; ";
             }
             return description;
         }
 
-        #endregion
+        #endregion Methods
     }
 }

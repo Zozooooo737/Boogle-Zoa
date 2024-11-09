@@ -1,8 +1,9 @@
-﻿namespace Boogle_Zoa
+﻿using System.Collections.Generic;
+
+namespace Boogle_Zoa
 {
     internal class Board
     {
-
         #region Attributes
 
         private Dice[] dices;
@@ -48,7 +49,6 @@
             }
             return description;
         }
-
 
         public bool GameBoard_Test(string word, DictionaryWords dico)
         {
@@ -175,6 +175,96 @@
                        FindWord(word, board, x + 1, y + 1, index + 1);
             }
         }
+
+        /*
+        public List<List<(int, int)>> FindWord(string word, char[,] board, int x, int y, int index = 0, List<List<(int, int)>> listOfPath)
+        {
+            // 
+            if (index == word.Length - 1 && board[x, y] == word[index])
+            {
+                return 1;
+            }
+
+            // Vérifie les limites et la correspondance des caractères
+            if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1) || board[x, y] != word[index])
+            {
+                return 0;
+            }
+
+            if (list)
+                listOfPath.Add(new List<(int, int)> { });
+
+            // Cas 1 : Les cases dans les coins ont 3 voisins adjacents
+            if (x == 0 && y == 0)
+            {
+                return FindWord(word, board, x, y + 1, index + 1, listOfPath[index].Add((x, y)) +
+                       FindWord(word, board, x + 1, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y, index + 1);
+            }
+            else if (x == 0 && y == board.GetLength(1) - 1)
+            {
+                return FindWord(word, board, x + 1, y, index + 1) +
+                       FindWord(word, board, x + 1, y - 1, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1);
+            }
+            else if (x == board.GetLength(0) - 1 && y == board.GetLength(1) - 1)
+            {
+                return FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1) +
+                       FindWord(word, board, x - 1, y - 1, index + 1);
+            }
+            else if (x == board.GetLength(0) - 1 && y == 0)
+            {
+                return FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x - 1, y + 1, index + 1) +
+                       FindWord(word, board, x, y + 1, index + 1);
+            }
+            // Cas 2 : Les cases sur les bords (coins exclus) ont 5 voisins adjacents
+            else if (x == 0) // Bord supérieur
+            {
+                return FindWord(word, board, x, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y, index + 1) +
+                       FindWord(word, board, x + 1, y - 1, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1);
+            }
+            else if (y == board.GetLength(1) - 1) // Bord droit
+            {
+                return FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x - 1, y - 1, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1) +
+                       FindWord(word, board, x + 1, y - 1, index + 1) +
+                       FindWord(word, board, x + 1, y, index + 1);
+            }
+            else if (x == board.GetLength(0) - 1) // Bord inférieur
+            {
+                return FindWord(word, board, x, y + 1, index + 1) +
+                       FindWord(word, board, x - 1, y + 1, index + 1) +
+                       FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x - 1, y - 1, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1);
+            }
+            else if (y == 0) // Bord gauche
+            {
+                return FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x - 1, y + 1, index + 1) +
+                       FindWord(word, board, x, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y, index + 1);
+            }
+            else // Dernier Cas : La case se trouve à l'intérieur
+            {
+                return FindWord(word, board, x - 1, y - 1, index + 1) +
+                       FindWord(word, board, x - 1, y, index + 1) +
+                       FindWord(word, board, x - 1, y + 1, index + 1) +
+                       FindWord(word, board, x, y - 1, index + 1) +
+                       FindWord(word, board, x, y + 1, index + 1) +
+                       FindWord(word, board, x + 1, y - 1, index + 1) +
+                       FindWord(word, board, x + 1, y, index + 1) +
+                       FindWord(word, board, x + 1, y + 1, index + 1);
+            }
+        }
+        */
 
         #endregion
     }
