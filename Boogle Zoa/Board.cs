@@ -59,7 +59,7 @@ namespace Boogle_Zoa
             return description;
         }
 
-
+        // Vérification avec le dicooooooooooo
         public bool GameBoard_Test(string word, DictionaryWords dico)
         {
             bool wordFound = false;
