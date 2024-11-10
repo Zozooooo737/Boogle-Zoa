@@ -63,16 +63,11 @@
 
             DictionaryWords Dico = new DictionaryWords("../../../data/MotsPossiblesFR.txt", "FR");
 
-            Console.WriteLine(Dico.toString());
+            string word = Console.ReadLine();
 
-            Console.WriteLine(Dico.RechDichoRecursif("Table"));
-            Player noa = new Player("noa");
-            Player p = new Player("zozo");
-            Console.WriteLine(p.Score);
-            p.Contain("cc");
-            p.AddWord("cc", lettersInforamtion);
-            Console.WriteLine(p.toString());
-            p.toString();
+            Console.WriteLine(B.GameBoard_Test(word, Dico));
+
+            
         }
     }
 }

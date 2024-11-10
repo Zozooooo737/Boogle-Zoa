@@ -4,17 +4,19 @@ namespace Boogle_Zoa
 {
     internal class Board
     {
-        #region Attributes
-
         private Dice[] dices;
         private char[] visibleLetters;
+        private char[,] boardOfLetters;
         private const int size = 16;
         private const int side = 4;
 
-        #endregion
+        private static readonly (int, int)[] Directions = new (int, int)[]
+        {
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1),           (0, 1),
+            (1, -1),  (1, 0),  (1, 1)
+        };
 
-
-        #region Constructor
 
         public Board(Dice[] d)
         {
@@ -25,16 +27,8 @@ namespace Boogle_Zoa
             {
                 visibleLetters[i] = dices[i].VisibleLetter;
             }
-        }
 
-        #endregion
-
-
-        #region Methods
-
-        public string toString()
-        {
-            string description = "";
+            boardOfLetters = new char[side, side];
 
             int n = 0;
 
@@ -42,44 +36,42 @@ namespace Boogle_Zoa
             {
                 for (int j = 0; j < side; j++)
                 {
-                    description += visibleLetters[n] + " ";
+                    boardOfLetters[i, j] = visibleLetters[n];
                     n++;
+                }
+            }
+        }
+
+
+
+        public string toString()
+        {
+            string description = "";
+
+            for (int i = 0; i < side; i++)
+            {
+                for (int j = 0; j < side; j++)
+                {
+                    description += boardOfLetters[i,j] + " ";
                 }
                 description += "\n";
             }
             return description;
         }
 
+
         public bool GameBoard_Test(string word, DictionaryWords dico)
         {
-            bool adja = false;
+            bool wordFound = false;
 
-            char[,] board = new char[side, side];
-            int n = 0;
+            List<List<(int, int)>> allPaths = new List<List<(int, int)>>();
+            allPaths = FindAllWordPaths(word);
 
-            for (int i = 0; i < side; i++)
+            if (allPaths.Count > 0)
             {
-                for (int j = 0; j < side; j++)
-                {
-                    board[i, j] = visibleLetters[n];
-                    n++;
-                }
+                wordFound = true;
             }
-
-            for (int i = 0; i < side; i++)
-            {
-                for (int j = 0; j < side; j++)
-                {
-                    int result = FindWord(word, board, i, j, 0);
-
-                    if (result > 1)
-                    {
-                        adja = true;
-                    };
-
-                }
-            }
-            return adja;
+            return wordFound;
         }
 
 
@@ -176,96 +168,48 @@ namespace Boogle_Zoa
             }
         }
 
-        /*
-        public List<List<(int, int)>> FindWord(string word, char[,] board, int x, int y, int index = 0, List<List<(int, int)>> listOfPath)
+
+
+        public List<List<(int, int)>> FindAllWordPaths(string word)
         {
-            // 
-            if (index == word.Length - 1 && board[x, y] == word[index])
+            List<List<(int, int)>> allPaths = new List<List<(int, int)>>(); 
+            word = word.ToUpper();
+
+            for (int x = 0; x < boardOfLetters.GetLength(0); x++)
             {
-                return 1;
+                for (int y = 0; y < boardOfLetters.GetLength(1); y++)
+                {
+                    FindWordRecursive(word, boardOfLetters, x, y, 0, new List<(int, int)>(), allPaths);
+                }
             }
 
-            // Vérifie les limites et la correspondance des caractères
-            if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1) || board[x, y] != word[index])
-            {
-                return 0;
-            }
-
-            if (list)
-                listOfPath.Add(new List<(int, int)> { });
-
-            // Cas 1 : Les cases dans les coins ont 3 voisins adjacents
-            if (x == 0 && y == 0)
-            {
-                return FindWord(word, board, x, y + 1, index + 1, listOfPath[index].Add((x, y)) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else if (x == 0 && y == board.GetLength(1) - 1)
-            {
-                return FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1 && y == board.GetLength(1) - 1)
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1 && y == 0)
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1);
-            }
-            // Cas 2 : Les cases sur les bords (coins exclus) ont 5 voisins adjacents
-            else if (x == 0) // Bord supérieur
-            {
-                return FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (y == board.GetLength(1) - 1) // Bord droit
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1) // Bord inférieur
-            {
-                return FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (y == 0) // Bord gauche
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else // Dernier Cas : La case se trouve à l'intérieur
-            {
-                return FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1);
-            }
+            return allPaths;
         }
-        */
 
-        #endregion
+
+        private void FindWordRecursive(string word, char[,] board, int x, int y, int index, List<(int, int)> path, List<List<(int, int)>> allPaths)
+        {
+            if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1) || board[x, y] != word[index] || path.Contains((x, y)))
+            {
+                return;
+            }
+
+            path.Add((x, y));
+
+            if (index == word.Length - 1)
+            {
+                allPaths.Add(new List<(int, int)>(path));
+            }
+            else
+            {
+                foreach (var (dx, dy) in Directions)
+                {
+                    int newX = x + dx;
+                    int newY = y + dy;
+                    FindWordRecursive(word, board, newX, newY, index + 1, path, allPaths);
+                }
+            }
+            path.RemoveAt(path.Count - 1);
+        }
     }
 }
