@@ -3,7 +3,7 @@ using Boogle_Zoa;
 namespace Boogle_Zoa_Tests
 {
     [TestClass]
-    public class PlayerTests
+    public class BoogleZoaTests
     {
         Dictionary<char, int[]> lettersInformation = new Dictionary<char, int[]>
             {
@@ -34,6 +34,9 @@ namespace Boogle_Zoa_Tests
                 {'Y', new int[] {10, 1}},
                 {'Z', new int[] {10, 1}}
             };
+        Random random = new Random();
+
+        #region Player.cs
 
         [TestMethod]
         public void Player_InitializeName()
@@ -122,12 +125,12 @@ namespace Boogle_Zoa_Tests
             string word = "LOL";
             player.AddWord(word, lettersInformation);
             int expectedScore = lettersInformation['L'][0] + lettersInformation['O'][0] + lettersInformation['L'][0];
-            
+
             Assert.AreEqual(expectedScore, player.Score);
         }
 
         [TestMethod]
-        public void TestToString_ShouldReturnCorrectPlayerDescription()
+        public void ToString_ShouldReturnCorrectPlayerDescription()
         {
             // Test que la méthode toString retourne une description correcte du joueur avec le nom, score et mots trouvés
             Player player = new Player("Powder");
@@ -140,6 +143,54 @@ namespace Boogle_Zoa_Tests
 
             Assert.AreEqual(expectedDescription, result);
         }
-    }
 
+        #endregion
+
+        #region Dice.cs
+
+        [TestMethod]
+        public void Dice_IntializeLetters()
+        {
+            Dice d = new Dice(random, lettersInformation);
+            char[] result = d.Letters;
+
+            Assert.AreEqual(6, result.Length);
+        }
+
+        [TestMethod]
+        public void VisibleLetter_ShouldReturnCorrectLetter()
+        {
+            Dice d = new Dice(random, lettersInformation);
+            char result = d.VisibleLetter;
+            Assert.IsTrue(lettersInformation.Keys.Contains(result));
+        }
+
+        [TestMethod]
+        public void Roll_ShouldActualizeUsedLetters()
+        {
+            Dice d = new Dice(random, lettersInformation);
+            char letter = d.VisibleLetter;
+            int result = Dice.UsedLetters[letter];
+
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void ToString_ShouldReturnCorrectDiceDescription()
+        {
+            var dice = new Dice(random, lettersInformation);
+            var letters = dice.Letters;
+            char visibleLetter = dice.VisibleLetter;
+            string result = dice.toString();
+            string expected = "Lettre visible : " + visibleLetter + " \nEnsemble des lettres : ";
+            foreach (char Lettre in letters)
+            {
+                expected += Lettre + " ; ";
+            }
+
+            Assert.AreEqual(expected, result);
+        }
+
+        #endregion
+    }
 }

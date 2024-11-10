@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace Boogle_Zoa
+﻿namespace Boogle_Zoa
 {
     internal class DictionaryWords
     {

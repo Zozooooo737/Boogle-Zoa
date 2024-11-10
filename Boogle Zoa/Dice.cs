@@ -3,7 +3,7 @@
     /// <summary>
     /// Représente un dé à 6 faces avec une lettre sur chacune d'elles (<see cref="letters"/>), dont une face visible (<see cref="visibleLetter"/>).
     /// </summary>
-    internal class Dice
+    public class Dice
     {
         private char[] letters;                         // Tableau des lettres présentes sur les 6 faces du dé.
         private char visibleLetter;                     // Lettre qui sera sur la face supérieure du dé quand il sera lancé.
@@ -47,11 +47,28 @@
 
 
         /// <summary>
+        /// Renvoie les 6 lettres  (<see cref="letters"/>) du dé.
+        /// </summary>
+        public char[] Letters 
+        { 
+            get { return letters; } 
+        }
+
+
+        /// <summary>
         /// Renvoie la lettre visible (<see cref="visibleLetter"/>) du dé.
         /// </summary>
         public char VisibleLetter                                                     // Propriété utilisé pour connaitre la face visible du dé lors de la création du tableau.
         {
             get { return visibleLetter; }
+        }
+
+        /// <summary>
+        /// Renvoie le dictionnaire des apparitions de chaques lettres visibles (<see cref="usedLetters"/>).
+        /// </summary>
+        public static Dictionary<char, int> UsedLetters                                                    // Propriété utilisé pour connaitre la face visible du dé lors de la création du tableau.
+        {
+            get { return usedLetters; }
         }
 
 
@@ -74,7 +91,7 @@
         /// <returns>Renvoie une chaîne de caractères structurée.</returns>
         public string toString()                                                                // Méthode qui renvoie la descriptiion du dé : Faces + Lettre Visible.
         {
-            string description = $"Lettre visible : {letters} \nEnsemble des lettres : ";       // On utilise l'interpolation de chaînes pour faciliter l'insertion des attributs dans le string
+            string description = $"Lettre visible : {visibleLetter} \nEnsemble des lettres : ";       // On utilise l'interpolation de chaînes pour faciliter l'insertion des attributs dans le string
             foreach (char Lettre in letters)
             {
                 description += Lettre + " ; ";
