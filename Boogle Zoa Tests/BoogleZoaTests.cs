@@ -5,36 +5,38 @@ namespace Boogle_Zoa_Tests
     [TestClass]
     public class BoogleZoaTests
     {
-        Dictionary<char, int[]> lettersInformation = new Dictionary<char, int[]>
-            {
-                {'A', new int[] {1, 9}},
-                {'B', new int[] {3, 2}},
-                {'C', new int[] {3, 2}},
-                {'D', new int[] {2, 3}},
-                {'E', new int[] {1, 15}},
-                {'F', new int[] {4, 2}},
-                {'G', new int[] {2, 2}},
-                {'H', new int[] {4, 2}},
-                {'I', new int[] {1, 8}},
-                {'J', new int[] {8, 1}},
-                {'K', new int[] {10, 1}},
-                {'L', new int[] {1, 5}},
-                {'M', new int[] {2, 3}},
-                {'N', new int[] {1, 6}},
-                {'O', new int[] {1, 6}},
-                {'P', new int[] {3, 2}},
-                {'Q', new int[] {8, 1}},
-                {'R', new int[] {1, 6}},
-                {'S', new int[] {1, 6}},
-                {'T', new int[] {1, 6}},
-                {'U', new int[] {1, 6}},
-                {'V', new int[] {4, 2}},
-                {'W', new int[] {10, 1}},
-                {'X', new int[] {10, 1}},
-                {'Y', new int[] {10, 1}},
-                {'Z', new int[] {10, 1}}
-            };
+        Dictionary<char, (int, int)> lettersInformation = new Dictionary<char, (int, int)>
+        {
+            {'A', (1, 9)},
+            {'B', (3, 2)},
+            {'C', (3, 2)},
+            {'D', (2, 3)},
+            {'E', (1, 15)},
+            {'F', (4, 2)},
+            {'G', (2, 2)},
+            {'H', (4, 2)},
+            {'I', (1, 8)},
+            {'J', (8, 1)},
+            {'K', (10, 1)},
+            {'L', (1, 5)},
+            {'M', (2, 3)},
+            {'N', (1, 6)},
+            {'O', (1, 6)},
+            {'P', (3, 2)},
+            {'Q', (8, 1)},
+            {'R', (1, 6)},
+            {'S', (1, 6)},
+            {'T', (1, 6)},
+            {'U', (1, 6)},
+            {'V', (4, 2)},
+            {'W', (10, 1)},
+            {'X', (10, 1)},
+            {'Y', (10, 1)},
+            {'Z', (10, 1)}
+        };
+
         Random random = new Random();
+
 
         #region Player.cs
 
@@ -124,7 +126,7 @@ namespace Boogle_Zoa_Tests
             Player player = new Player("Viktor");
             string word = "LOL";
             player.AddWord(word, lettersInformation);
-            int expectedScore = lettersInformation['L'][0] + lettersInformation['O'][0] + lettersInformation['L'][0];
+            int expectedScore = lettersInformation['L'].Item1 + lettersInformation['O'].Item1 + lettersInformation['L'].Item1;
 
             Assert.AreEqual(expectedScore, player.Score);
         }
@@ -146,11 +148,13 @@ namespace Boogle_Zoa_Tests
 
         #endregion
 
+
         #region Dice.cs
 
         [TestMethod]
         public void Dice_IntializeLetters()
         {
+            // Teste que le constructeur initialise correctement le tableau des lettres avec 6 éléments
             Dice d = new Dice(random, lettersInformation);
             char[] result = d.Letters;
 
@@ -160,14 +164,17 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void VisibleLetter_ShouldReturnCorrectLetter()
         {
+            // Teste que la lettre visible est bien présente dans l'alphabet
             Dice d = new Dice(random, lettersInformation);
             char result = d.VisibleLetter;
+
             Assert.IsTrue(lettersInformation.Keys.Contains(result));
         }
 
         [TestMethod]
         public void Roll_ShouldActualizeUsedLetters()
         {
+            // Teste que l'appel de Roll met à jour le compteur de lettres utilisées pour la lettre visible
             Dice d = new Dice(random, lettersInformation);
             char letter = d.VisibleLetter;
             int result = Dice.UsedLetters[letter];
@@ -178,6 +185,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void ToString_ShouldReturnCorrectDiceDescription()
         {
+            // Teste que la méthode ToString retourne la description correcte des lettres du dé
             var dice = new Dice(random, lettersInformation);
             var letters = dice.Letters;
             char visibleLetter = dice.VisibleLetter;

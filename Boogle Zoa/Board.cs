@@ -1,6 +1,6 @@
 ﻿namespace Boogle_Zoa
 {
-    internal class Board
+    public class Board
     {
         private Dice[] dices;
         private char[] visibleLetters;
