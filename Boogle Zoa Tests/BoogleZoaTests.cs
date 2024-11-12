@@ -37,13 +37,53 @@ namespace Boogle_Zoa_Tests
 
         Random random = new Random();
 
+        List<string> TestWords = new List<string>
+        {
+            "APPLE", "BANANA", "ORANGE", "GRAPE", "MELON", "BERRY", "KIWI", "MANGO",
+            "PEACH", "LEMON", "LIME", "PEAR", "PLUM", "CHERRY", "DATE", "FIG",
+            "APRICOT", "RAISIN", "BLUEBERRY", "STRAWBERRY", "RASPBERRY", "BLACKBERRY",
+            "PINEAPPLE", "WATERMELON", "AVOCADO", "COCONUT", "MANGO", "TANGERINE", "MANDARIN"
+        };
+
+        Dictionary<int, List<string>> TestWordsBySize = new Dictionary<int, List<string>>
+        {
+            { 3, new List<string> { "FIG" } },
+            { 4, new List<string> { "DATE", "KIWI", "LIME", "PEAR", "PLUM" } },
+            { 5, new List<string> { "APPLE", "BERRY", "GRAPE", "LEMON", "MANGO", "MANGO", "MELON", "PEACH" } },
+            { 6, new List<string> { "BANANA", "CHERRY", "ORANGE", "RAISIN" } },
+            { 7, new List<string> { "APRICOT", "AVOCADO", "COCONUT" } },
+            { 8, new List<string> { "MANDARIN" } },
+            { 9, new List<string> { "BLUEBERRY", "PINEAPPLE", "RASPBERRY", "TANGERINE" } },
+            { 10, new List<string> { "BLACKBERRY", "STRAWBERRY", "WATERMELON" } }
+        };
+
+        Dictionary<char, List<string>> TestWordsByLetter = new Dictionary<char, List<string>>
+        {
+            { 'A', new List<string> { "APPLE", "APRICOT", "AVOCADO" } },
+            { 'B', new List<string> { "BANANA", "BERRY", "BLACKBERRY", "BLUEBERRY" } },
+            { 'C', new List<string> { "CHERRY", "COCONUT" } },
+            { 'D', new List<string> { "DATE" } },
+            { 'F', new List<string> { "FIG" } },
+            { 'G', new List<string> { "GRAPE" } },
+            { 'K', new List<string> { "KIWI" } },
+            { 'L', new List<string> { "LEMON", "LIME" } },
+            { 'M', new List<string> { "MANDARIN", "MANGO", "MANGO", "MELON" } },
+            { 'O', new List<string> { "ORANGE" } },
+            { 'P', new List<string> { "PEACH", "PEAR", "PINEAPPLE", "PLUM" } },
+            { 'R', new List<string> { "RAISIN", "RASPBERRY" } },
+            { 'S', new List<string> { "STRAWBERRY" } },
+            { 'T', new List<string> { "TANGERINE" } },
+            { 'W', new List<string> { "WATERMELON" } }
+        };
+
+
 
         #region Player.cs
 
         [TestMethod]
         public void Player_InitializeName()
         {
-            // Test que le constructeur initialise correctement le joueur avec le nom
+            // Teste que le constructeur initialise correctement le joueur avec le nom
             Player p = new Player("Ezreal");
             string result = p.Name;
 
@@ -53,7 +93,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void Player_InitializeScoreToZero()
         {
-            // Test que le score est bien initialisé à 0 au départ
+            // Teste que le score est bien initialisé à 0 au départ
             Player p = new Player("Pyke");
             int result = p.Score;
 
@@ -63,7 +103,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void Player_InitializeWordsFoundedAsEmpty()
         {
-            // Test que la liste des mots trouvés par le joueur est vide au départ
+            // Teste que la liste des mots trouvés par le joueur est vide au départ
             Player p = new Player("Xerath");
             List<string> result = p.WordsFound;
 
@@ -74,7 +114,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void Contain_WordNotInWordsFound_ReturnsFalse()
         {
-            // Test que la méthode Contain retourne false pour un mot qui n'a pas été trouvé
+            // Teste que la méthode Contain retourne false pour un mot qui n'a pas été trouvé
             Player p = new Player("Galio");
             bool result = p.Contain("Epee");
 
@@ -84,7 +124,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void Contain_WordInWordsFound_ReturnsTrue()
         {
-            // Test que la méthode Contain retourne true pour un mot déjà ajouté
+            // Teste que la méthode Contain retourne true pour un mot déjà ajouté
             Player p = new Player("Galio");
             p.AddWord("trinite", lettersInformation);
             bool result = p.Contain("Trinite");
@@ -95,7 +135,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void AddWord_UniqueWord_AddsToWordsFound()
         {
-            // Test que la méthode AddWord ajoute correctement un mot à la liste wordsFound
+            // Teste que la méthode AddWord ajoute correctement un mot à la liste wordsFound
             Player player = new Player("Jinx");
             string word = "Piltover";
             player.AddWord(word, lettersInformation);
@@ -107,7 +147,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void AddWord_DuplicateWord_DoesNotAddToWordsFound()
         {
-            // Test que la méthode AddWord n'ajoute pas un mot déjà trouvé
+            // Teste que la méthode AddWord n'ajoute pas un mot déjà trouvé
             Player player = new Player("Jayce");
             string word = "Magie";
             player.AddWord(word, lettersInformation);
@@ -122,7 +162,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void AddWord_UniqueWord_UpdatesScoreCorrectly()
         {
-            // Test que la méthode AddWord met à jour le score correctement en fonction des lettres
+            // Teste que la méthode AddWord met à jour le score correctement en fonction des lettres
             Player player = new Player("Viktor");
             string word = "LOL";
             player.AddWord(word, lettersInformation);
@@ -134,7 +174,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void ToString_ShouldReturnCorrectPlayerDescription()
         {
-            // Test que la méthode toString retourne une description correcte du joueur avec le nom, score et mots trouvés
+            // Teste que la méthode toString retourne une description correcte du joueur avec le nom, score et mots trouvés
             Player player = new Player("Powder");
             player.AddWord("Nexus", lettersInformation);
             player.AddWord("Canon", lettersInformation);
@@ -198,6 +238,122 @@ namespace Boogle_Zoa_Tests
 
             Assert.AreEqual(expected, result);
         }
+
+        #endregion
+
+
+        #region DictionaryWord.cs
+
+        [TestMethod]
+        public void DictionaryWords_InitializeWords()
+        {
+            // Teste la création d'un dictionnaire à partir d'un fichier, en vérifiant que le fichier est bien lu et que les mots sont stockés correctement.
+            DictionaryWords Dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            List<string> result = Dico.Words;
+
+            CollectionAssert.AreEqual(TestWords, result);
+        }
+
+        [TestMethod]
+        public void DictionaryWords_InitializeStructures()
+        {
+            // Teste les structure des dictionnaires "wordsBySize" et "wordsByLetter" après initialisation, en vérifiant qu'ils contiennent les bons mots par longueur et première lettre.
+            DictionaryWords Dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+
+            foreach(int key in Dico.WordsBySize.Keys)
+            {
+                CollectionAssert.AreEqual(TestWordsBySize[key], Dico.WordsBySize[key]);
+            }
+            foreach (char key in Dico.WordsByLetter.Keys)
+            {
+                CollectionAssert.AreEqual(TestWordsByLetter[key], Dico.WordsByLetter[key]);
+            }
+        }
+
+        [TestMethod]
+        // Teste l'affichage du dictionnaire avec `toString`, en vérifiant que la description générée correspond bien à la structure attendue.
+        public void Test_DictionaryWords_toString()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord1` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
+        public void Test_CheckWord1_WordPresent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord1` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
+        public void Test_CheckWord1_WordAbsent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord2` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
+        public void Test_CheckWord2_WordPresent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord2` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
+        public void Test_CheckWord2_WordAbsent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord3` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
+        public void Test_CheckWord3_WordPresent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord3` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
+        public void Test_CheckWord3_WordAbsent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la recherche dichotomique `RecursiveBinarySearch` avec un mot présent dans la liste, pour vérifier qu'elle renvoie `true`.
+        public void Test_RecursiveBinarySearch_WordPresent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la recherche dichotomique `RecursiveBinarySearch` avec un mot absent dans la liste, pour vérifier qu'elle renvoie `false`.
+        public void Test_RecursiveBinarySearch_WordAbsent()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord1` avec un mot dont la taille n'existe pas dans `wordsBySize`, pour s'assurer qu'elle renvoie `false`.
+        public void Test_CheckWord1_SizeNotExist()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord2` avec un mot commençant par une lettre non présente dans `wordsByLetter`, pour vérifier qu'elle renvoie `false`.
+        public void Test_CheckWord2_LetterNotExist()
+        {
+
+        }
+
+        [TestMethod]
+        // Teste la méthode `CheckWord3` avec un mot dont la taille et la première lettre ne sont pas présentes dans le dictionnaire, pour vérifier qu'elle renvoie `false`.
+        public void Test_CheckWord3_SizeAndLetterNotExist()
+        {
+
+        }
+
 
         #endregion
     }

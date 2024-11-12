@@ -67,6 +67,30 @@
             }
         }
 
+        /// <summary>
+        /// Renvoie la liste de mots (<see cref="words"/>) du dictionnaire.
+        /// </summary>
+        public List<string> Words
+        {
+            get { return words; }
+        }
+
+
+        /// <summary>
+        /// Renvoie le dictionnaire qui associe à chaque caractère, la liste des mots commencant par ce caractère (<see cref="wordsByLetter"/>).
+        /// </summary>
+        public Dictionary<char, List<string>> WordsByLetter
+        {
+            get { return wordsByLetter; }
+        }
+
+        /// <summary>
+        /// Renvoie le dictionnaire qui associe à chaque taille, la liste des mots faisant cette taille (<see cref="wordsBySize"/>).
+        /// </summary>
+        public Dictionary<int, List<string>> WordsBySize
+        {
+            get { return wordsBySize; }
+        }
 
 
         /// <summary>
