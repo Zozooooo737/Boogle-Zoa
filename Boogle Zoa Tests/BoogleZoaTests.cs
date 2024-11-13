@@ -354,6 +354,13 @@ namespace Boogle_Zoa_Tests
 
         }
 
+        [TestMethod]
+        // Teste la Méthode 'BubbleSort' avec une liste de mot donnée, pour vérifier si il la trie correctement.
+        public void Test_BubbleSort_jspCommentOnNomme()
+        {
+
+        }
+
 
         #endregion
     }
