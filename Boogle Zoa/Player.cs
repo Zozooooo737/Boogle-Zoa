@@ -54,7 +54,7 @@
         /// <summary>
         /// Vérifie si un mot donné (<paramref name="word"/>) est présent dans la liste des mots trouvés par le joueur (<see cref="wordsFound"/>).
         /// </summary>
-        /// <param name="word">Le mot à rechercher dans la liste des mots trouvés par le joueur.</param>
+        /// <param name="word">Mot à vérifier</param>
         /// <returns>
         /// <c>true</c> si le mot est présent dans la liste des mots trouvés par le joueur ; sinon, <c>false</c>.
         /// </returns>
@@ -91,7 +91,7 @@
 
 
         /// <summary>
-        /// Renvoie une chaîne de caractère <c>string</c> qui décrit le joueur (<see cref="Player"/>) avec son nom (<see cref="name"/>), son score (<see cref="score"/>) et sa liste des mots qu'il a trouvé (<see cref="wordsFound"/>).
+        /// Renvoie une chaîne de caractères <c>string</c> qui décrit le joueur (<see cref="Player"/>) avec son nom (<see cref="name"/>), son score (<see cref="score"/>) et sa liste des mots qu'il a trouvé (<see cref="wordsFound"/>).
         /// </summary>
         /// <returns>Renvoie une chaîne de caractères <c>string</c> structurée.</returns>
         public string toString()

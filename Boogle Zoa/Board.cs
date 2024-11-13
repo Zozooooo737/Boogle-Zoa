@@ -1,5 +1,10 @@
 ﻿namespace Boogle_Zoa
 {
+    /// <summary>
+    /// Représente un plateau de jeu 4x4 cases, composé de lettres générées à partir de dés (<see cref="dices"/>). <br/>
+    /// Chaque case contient une lettre visible (<see cref="visibleLetters"/>) organisée dans une grille (<see cref="boardOfLetters"/>). <br/>
+    /// La taille totale est fixée par <see cref="size"/> et la longueur d'un côté par <see cref="side"/>.
+    /// </summary>
     public class Board
     {
         private Dice[] dices;
@@ -16,14 +21,19 @@
         };
 
 
-        public Board(Dice[] d)
+
+        /// <summary>
+        /// Crée un plateau de jeu à partir d'une liste de dés (<paramref name="dices"/>).
+        /// </summary>
+        /// <param name="d">Liste de dés (<see cref="Dice"/>)</param>
+        public Board(Dice[] dices)
         {
-            dices = d;
+            this.dices = dices;
             visibleLetters = new char[size];
 
             for (int i = 0; i < size; i++)
             {
-                visibleLetters[i] = dices[i].VisibleLetter;
+                visibleLetters[i] = this.dices[i].VisibleLetter;
             }
 
             boardOfLetters = new char[side, side];
@@ -42,6 +52,10 @@
 
 
 
+        /// <summary>
+        /// Renvoie une chaîne de caractères <c>string</c> qui affiche le plateau de jeu (<see cref="boardOfLetters"/>).
+        /// </summary>
+        /// <returns>Renvoie une chaîne de caractères <c>string</c> structurée.</returns>
         public string toString()
         {
             string description = "";
@@ -57,8 +71,16 @@
             return description;
         }
 
-        // Vérification avec le dicooooooooooo
-        public bool GameBoard_Test(string word, DictionaryWords dico)
+
+        /// <summary>
+        /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="boardOfLetters"/>) et dans le dictionnaire (<paramref name="dico"/>).
+        /// </summary>
+        /// <param name="word">Mot à vérifier</param>
+        /// <param name="dico">Dictionnaire utilisé</param>
+        /// <returns>
+        /// <c>true</c> si le mot est présent sur le plateau de jeu ; sinon, <c>false</c>.
+        /// </returns>
+        public bool GameBoardTest(string word, DictionaryWords dico)
         {
             bool wordFound = false;
 
@@ -73,101 +95,14 @@
         }
 
 
-        //
-        // VOIR CAS PARTICULIER TOT (TOTO) --> Ajouter en paramêtre une liste dynamique qui stoquera les positions des lettres trouvés, de plus a chaque vérif --> on regarde si la case n'est pas déjà présente dans la liste;
-        //
-
-        //
-        // VOIR CAS PARTICULIER TOUT.T --> Choisir le mots a retirer quand plusieurs poossibilité
-        // 
-
-        public int FindWord(string word, char[,] board, int x, int y, int index = 0)
-        {
-            // 
-            if (index == word.Length - 1 && board[x, y] == word[index])
-            {
-                return 1;
-            }
-
-            // Vérifie les limites et la correspondance des caractères
-            if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1) || board[x, y] != word[index])
-            {
-                return 0;
-            }
-
-            // Cas 1 : Les cases dans les coins ont 3 voisins adjacents
-            if (x == 0 && y == 0)
-            {
-                return FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else if (x == 0 && y == board.GetLength(1) - 1)
-            {
-                return FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1 && y == board.GetLength(1) - 1)
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1 && y == 0)
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1);
-            }
-            // Cas 2 : Les cases sur les bords (coins exclus) ont 5 voisins adjacents
-            else if (x == 0) // Bord supérieur
-            {
-                return FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (y == board.GetLength(1) - 1) // Bord droit
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else if (x == board.GetLength(0) - 1) // Bord inférieur
-            {
-                return FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1);
-            }
-            else if (y == 0) // Bord gauche
-            {
-                return FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1);
-            }
-            else // Dernier Cas : La case se trouve à l'intérieur
-            {
-                return FindWord(word, board, x - 1, y - 1, index + 1) +
-                       FindWord(word, board, x - 1, y, index + 1) +
-                       FindWord(word, board, x - 1, y + 1, index + 1) +
-                       FindWord(word, board, x, y - 1, index + 1) +
-                       FindWord(word, board, x, y + 1, index + 1) +
-                       FindWord(word, board, x + 1, y - 1, index + 1) +
-                       FindWord(word, board, x + 1, y, index + 1) +
-                       FindWord(word, board, x + 1, y + 1, index + 1);
-            }
-        }
-
-
-
+        /// <summary>
+        /// Renvoie tous les chemins possibles pour former un mot donné (<paramref name="word"/>) sur le plateau de lettres (<see cref="boardOfLetters"/>). <br/>
+        /// Chaque chemin est une liste de coordonnées (x, y) représentant les cases successives utilisées pour former le mot.
+        /// </summary>
+        /// <param name="word">Le mot à rechercher sur le plateau.</param>
+        /// <returns>Une liste de chemins, chaque chemin étant une liste de coordonnées (x, y) des cases parcourues.</returns>
+        /// Nous lançons une recherche récursive sur chacune des cases du plateau afin de lister tous les chemins possibles du mot.
+        /// A termes, le joueur pourra choisir laquelle de ces possibilités il souhaite compter, afin de gérer le cas où un mot serait présent plusieurs fois sur le plateau.
         public List<List<(int, int)>> FindAllWordPaths(string word)
         {
             List<List<(int, int)>> allPaths = new List<List<(int, int)>>(); 
@@ -185,6 +120,19 @@
         }
 
 
+        /// <summary>
+        /// Recherche récursive des chemins possibles pour former un mot donné sur le plateau de lettres.
+        /// La méthode explore les cases adjacentes pour correspondre aux lettres du mot, ajoutant chaque chemin valide à <paramref name="allPaths"/>.
+        /// </summary>
+        /// <param name="word">Mot à rechercher</param>
+        /// <param name="board">Plateau de lettres où la recherche est effectuée.</param>
+        /// <param name="x">Coordonnée x de la case actuelle sur le plateau</param>
+        /// <param name="y">Coordonnée y de la case actuelle sur le plateau</param>
+        /// <param name="index">Index actuel dans le mot, représentant la lettre cible à rechercher sur cette case</param>
+        /// <param name="path">Liste des coordonnées (x, y) représentant le chemin actuel pour former le mot</param>
+        /// <param name="allPaths">Collection de tous les chemins trouvés, chaque chemin étant une liste de coordonnées formant le mot</param>
+        /// Version 2 : Nous avons fait une nouvelle fonction récursive pour gérer le cas où plusieurs chemins seraient possibles à partir d'une même lettre.
+        /// Optimisation de la Fonction : Initialement nous faisions une disjonction de cas pour trouver les cases adjacentes, désormais nous réalisons toutes les adjacences possibles et en début de fonction, nous éliminons toutes les cases qui ne respectent pas les conditions.
         private void FindWordRecursive(string word, char[,] board, int x, int y, int index, List<(int, int)> path, List<List<(int, int)>> allPaths)
         {
             if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1) || board[x, y] != word[index] || path.Contains((x, y)))
