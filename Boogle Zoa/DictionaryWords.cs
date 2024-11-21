@@ -23,9 +23,20 @@
         /// Si le fichier n'existe pas, on catch l'erreur et initialise `words` avec une liste vide.
         /// Optimisation de la Mémoire --> On initialise "int n" et "int c" à l'extérieur de la boucle "foreach" pour réaliser que 2 allocations au lieu de 2*n.
         /// Optimisation de la Mémoire --> Les clés des deux dictionnaire "wordsBySize" et "wordsByLetter" ne sont pas prédéfinies afin de gagner en espace de mémoire. Exemple : si dans mon fichier, aucun mot ne commence par la lettre "F", le couple {'F', List'string'} ne sera pas présent dans wordsByLetter.
-        public DictionaryWords(string filePath, string language)
+        public DictionaryWords(string language)
         {
             this.language = language;
+            string filePath="";
+
+            if(language == "FR")
+            {
+                filePath = "../../../data/MotsPossiblesFR.txt";
+            }
+            else if (language == "EN")
+            {
+                filePath = "../../../data/MotsPossiblesEN.txt";
+            }
+
 
             try
             {
@@ -42,7 +53,9 @@
             int n;
             char c;
 
-            foreach (string word in words) // 
+            words.Sort(); // BubbleSort met plus de 30 minutes à s'exécuter chiantos
+            
+            foreach (string word in words) 
             {
                 n = word.Length;
                 c = word[0];
@@ -64,16 +77,6 @@
                 {
                     wordsByLetter.Add(c, new List<string> { word });
                 }
-            }
-
-            foreach (List<string> list in wordsBySize.Values)
-            {
-                BubbleSort(list);
-            }
-
-            foreach (List<string> list in wordsByLetter.Values)
-            {
-                BubbleSort(list);
             }
         }
 
@@ -110,6 +113,7 @@
         /// </summary>
         /// <param name="list">Liste de mots à trier</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir une complexité de O(n) dans le meilleur des cas, et une complexité de O(n²) dans le pire des cas.
+        /// Optimisation de la Complexité --> Dans un tri à bulles, après chaque passe, les derniers éléments sont déjà triés. Nous avons bien diminué la taille de la boucle avec n--, pour réduire la longueur des parcours.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable "temp" en dehors des boucles, pour réduire l'allocation de la mémoire à 1 case. 
         public static void BubbleSort(List<string> list)
         {
@@ -129,6 +133,8 @@
                         list[i + 1] = temp;
                         swapped = true;
                     }
+                    Console.WriteLine(list[i]);
+
                 }
                 n--;
             } while (swapped);

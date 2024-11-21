@@ -1,4 +1,7 @@
-﻿namespace Boogle_Zoa
+﻿using System.Diagnostics;
+
+
+namespace Boogle_Zoa
 {
     public class Game
     {
@@ -32,43 +35,30 @@
         private int numberOfRound;
         private int sizeOfBoard;
         private string language;
+        private DictionaryWords dictionaryWords;
 
         private Player[] players;
+
+        private static readonly Dictionary<char, (int, int)> lettersInformation;
 
         private Random random;
 
 
         // A REVOIR, comment creer ca a partir du fichier
 
-        Dictionary<char, (int, int)> lettersInformation = new Dictionary<char, (int, int)>
+        // Optimisation : nous effectuons l'initialisation de lettersInformation qu'une seule fois
+        static Game()
+        {
+            lettersInformation = new Dictionary<char, (int, int)> { };
+            string[] lines = File.ReadAllLines( "../../../data/Lettres.txt");
+            for (int l = 0; l < lines.Length; l++)
             {
-                {'A', (1, 9)},
-                {'B', (3, 2)},
-                {'C', (3, 2)},
-                {'D', (2, 3)},
-                {'E', (1, 15)},
-                {'F', (4, 2)},
-                {'G', (2, 2)},
-                {'H', (4, 2)},
-                {'I', (1, 8)},
-                {'J', (8, 1)},
-                {'K', (10, 1)},
-                {'L', (1, 5)},
-                {'M', (2, 3)},
-                {'N', (1, 6)},
-                {'O', (1, 6)},
-                {'P', (3, 2)},
-                {'Q', (8, 1)},
-                {'R', (1, 6)},
-                {'S', (1, 6)},
-                {'T', (1, 6)},
-                {'U', (1, 6)},
-                {'V', (4, 2)},
-                {'W', (10, 1)},
-                {'X', (10, 1)},
-                {'Y', (10, 1)},
-                {'Z', (10, 1)}
-            };
+                string[] information = lines[l].Split(';');
+                lettersInformation.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));
+            }
+        }
+
+
 
         public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRound, int sizeOfBoard, string language)
         {
@@ -78,17 +68,21 @@
             this.sizeOfBoard = sizeOfBoard;
             this.language = language;
 
+            dictionaryWords = new DictionaryWords(language);
+
             players = new Player[numberOfPlayers];
 
             random = new Random();
+
         }
+
+
 
         // Ecris message de validité
         public void InitializePlayerName()
         {
             for(int i = 0; i < numberOfPlayers; i++)
             {
-
                 string name = "";
                 do
                 {
@@ -120,13 +114,33 @@
 
                     // Création de la Board
                     Board board = new Board(dices);
-                    board.toString();
+                    Console.WriteLine(board.toString());
 
                     // Boucle Entrer mot / Verif le mot / ajoute le mot au joueur
+                    Console.WriteLine($"Which words can you see ?\n");
+                    string word = Console.ReadLine();
+                    Console.Write(word);
+                    if(board.GameBoardTest(word, dictionaryWords))
+                    {
+                        players[p].AddWord(word, lettersInformation); 
+                        Console.Write($" The word is valid! Your score is now at {players[p].Score} points!");
+                    }
+                    else
+                    {
+                        Console.Write(" The word is unvalid... Try again !");
+                    }
+
+                    Thread.Sleep(2000);
+
+                    Console.SetCursorPosition(0, Console.CursorTop);
+                    Console.Write(new string(' ', Console.BufferWidth));
+                    Console.SetCursorPosition(0, Console.CursorTop);
+
+                    // afficher gagnants et score et nuage de mots et les tétons de Enzo
 
                     // Temps par round
                     // Fini 
-                    
+
                 }
                 // Fin de round
             }

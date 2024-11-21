@@ -75,16 +75,16 @@
         /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="boardOfLetters"/>) et dans le dictionnaire (<paramref name="dico"/>).
         /// </summary>
         /// <param name="word">Mot à vérifier</param>
-        /// <param name="dico">Dictionnaire utilisé</param>
+        /// <param name="dictionary">Dictionnaire utilisé</param>
         /// <returns>
         /// <c>true</c> si le mot est présent sur le plateau de jeu ; sinon, <c>false</c>.
         /// </returns>
         /// Update : Renvoie la liste `allPaths` au lieu d'un bool / ou utiliser directement `FindAllWordPath`.
-        public bool GameBoardTest(string word, DictionaryWords dico)
+        public bool GameBoardTest(string word, DictionaryWords dictionary)
         {
             bool wordFound = false;
 
-            if (dico.CheckWord3(word))
+            if (dictionary.CheckWord3(word))
             {
                 List<List<(int, int)>> allPaths = new List<List<(int, int)>>();
                 allPaths = FindAllWordPaths(word);
