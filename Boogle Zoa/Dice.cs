@@ -30,6 +30,7 @@
         /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tableau de taille 2 représentant le poids et le nombre de cette lettre</param>
         /// En utilisant l'attribut de classe <see cref="usedLetters"/>, on prends en compte le nombre d'apparition des lettres afin de respecter le jeu du Boogle. 
         /// Optimisation de la Mémoire --> On a déclare "int c" à l'exterieur de la boucle "for" pour réalisquer qu'une seule allocation mémoire au lieu de 6.
+        /// Gérer le cas où plus de lettre dispos, pour finir le jeu à 100%
         public Dice(Random r, Dictionary<char, (int,int)> lettersInformation)
         {
             letters = new char[6];
@@ -45,6 +46,18 @@
                 while (usedLetters[letters[i]] >= lettersInformation[letters[i]].Item2);
             }
             Roll(r);
+        }
+
+
+        /// <summary>
+        /// Crée un dé en fixant comme lettre visible, le caractère (<paramref name="lettersInformation"/>).
+        /// </summary>
+        /// <param name="visibleLetter">Une lettre</param>
+        /// Ce constructeur permet de crée un dé en prédifinissant sa lettre visible afin de pouvoir crée des plateaux `Board` pertinent pour ses tests unitaires.
+        public Dice(char letter)
+        {
+            letters = new char[6];
+            visibleLetter = letter;
         }
 
 

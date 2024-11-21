@@ -5,7 +5,7 @@ namespace Boogle_Zoa_Tests
     [TestClass]
     public class BoogleZoaTests
     {
-        Dictionary<char, (int, int)> lettersInformation = new Dictionary<char, (int, int)>
+        readonly Dictionary<char, (int, int)> lettersInformation = new Dictionary<char, (int, int)>
         {
             {'A', (1, 9)},
             {'B', (3, 2)},
@@ -35,17 +35,17 @@ namespace Boogle_Zoa_Tests
             {'Z', (10, 1)}
         };
 
-        Random random = new Random();
+        readonly Random random = new Random();
 
-        List<string> TestWords = new List<string>
+        readonly List<string> testWords = new List<string>
         {
-            "APPLE", "BANANA", "ORANGE", "GRAPE", "MELON", "BERRY", "KIWI", "MANGO",
-            "PEACH", "LEMON", "LIME", "PEAR", "PLUM", "CHERRY", "DATE", "FIG",
-            "APRICOT", "RAISIN", "BLUEBERRY", "STRAWBERRY", "RASPBERRY", "BLACKBERRY",
-            "PINEAPPLE", "WATERMELON", "AVOCADO", "COCONUT", "MANGO", "TANGERINE", "MANDARIN"
+            "APPLE", "APRICOT", "AVOCADO", "BANANA", "BERRY", "BLACKBERRY", "BLUEBERRY", 
+            "CHERRY", "COCONUT", "DATE", "FIG", "GRAPE", "KIWI", "LEMON", "LIME", 
+            "MANDARIN", "MANGO", "MANGO", "MELON", "ORANGE", "PEACH", "PEAR", "PINEAPPLE", 
+            "PLUM", "RAISIN", "RASPBERRY", "STRAWBERRY", "TANGERINE", "WATERMELON"
         };
 
-        Dictionary<int, List<string>> TestWordsBySize = new Dictionary<int, List<string>>
+        readonly Dictionary<int, List<string>> testWordsBySize = new Dictionary<int, List<string>>
         {
             { 3, new List<string> { "FIG" } },
             { 4, new List<string> { "DATE", "KIWI", "LIME", "PEAR", "PLUM" } },
@@ -57,7 +57,7 @@ namespace Boogle_Zoa_Tests
             { 10, new List<string> { "BLACKBERRY", "STRAWBERRY", "WATERMELON" } }
         };
 
-        Dictionary<char, List<string>> TestWordsByLetter = new Dictionary<char, List<string>>
+        readonly Dictionary<char, List<string>> testWordsByLetter = new Dictionary<char, List<string>>
         {
             { 'A', new List<string> { "APPLE", "APRICOT", "AVOCADO" } },
             { 'B', new List<string> { "BANANA", "BERRY", "BLACKBERRY", "BLUEBERRY" } },
@@ -76,97 +76,119 @@ namespace Boogle_Zoa_Tests
             { 'W', new List<string> { "WATERMELON" } }
         };
 
+        readonly Dice[] testDices = { new Dice('A'), new Dice('R'), new Dice('D'), new Dice('D'), new Dice('C'), new Dice('K'), new Dice('G'), new Dice('A'), new Dice('F'), new Dice('I'), new Dice('E'), new Dice('T'), new Dice('I'), new Dice('W'), new Dice('G'), new Dice('X') };
 
+        readonly DictionaryWords testDictionnary = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
 
         #region Player.cs
 
         [TestMethod]
-        public void Player_InitializeName()
+        public void Player_Constructor_ShouldInitializeNameCorrectly()
         {
-            // Teste que le constructeur initialise correctement le joueur avec le nom
-            Player p = new Player("Ezreal");
-            string result = p.Name;
+            // Teste que le constructeur initialise correctement le joueur avec son nom.
+            string expectedName = "Ezreal";
 
-            Assert.AreEqual("Ezreal", result);
+            Player player = new Player(expectedName);
+            string actualName = player.Name;
+
+            Assert.AreEqual(expectedName, actualName);
         }
 
         [TestMethod]
-        public void Player_InitializeScoreToZero()
+        public void Player_Constructor_ShouldInitializeScoreToZero()
         {
             // Teste que le score est bien initialisé à 0 au départ
-            Player p = new Player("Pyke");
-            int result = p.Score;
+            string playerName = "Pyke";
+            int expectedScore = 0;
+            Player p = new Player(playerName);
 
-            Assert.AreEqual(0, result);
+            int actualScore = p.Score;
+
+            Assert.AreEqual(expectedScore, actualScore);
+
         }
 
         [TestMethod]
         public void Player_InitializeWordsFoundedAsEmpty()
         {
             // Teste que la liste des mots trouvés par le joueur est vide au départ
-            Player p = new Player("Xerath");
-            List<string> result = p.WordsFound;
+            string playerName = "Xerath";
+            Player player = new Player(playerName);
 
-            Assert.IsNotNull(result);
-            Assert.AreEqual(0, result.Count);
+            List<string> wordsFound = player.WordsFound;
+
+            Assert.IsNotNull(wordsFound);
+            Assert.AreEqual(0, wordsFound.Count);
         }
 
         [TestMethod]
         public void Contain_WordNotInWordsFound_ReturnsFalse()
         {
-            // Teste que la méthode Contain retourne false pour un mot qui n'a pas été trouvé
-            Player p = new Player("Galio");
-            bool result = p.Contain("Epee");
+            // Teste que la méthode `Contain` retourne `false` pour un mot qui n'a pas été trouvé
+            string playerName = "Galio";
+            string wordToCheck = "Epee";
+            Player player = new Player(playerName);
 
-            Assert.IsFalse(result);
+            bool isContained = player.Contain(wordToCheck);
+
+            Assert.IsFalse(isContained);
         }
 
         [TestMethod]
         public void Contain_WordInWordsFound_ReturnsTrue()
         {
-            // Teste que la méthode Contain retourne true pour un mot déjà ajouté
-            Player p = new Player("Galio");
+            // Teste que la méthode `Contain` retourne `true` pour un mot déjà ajouté
+            string playerName = "Akali";
+            string wordToCheck = "Trinite";
+            Player p = new Player(playerName);
             p.AddWord("trinite", lettersInformation);
-            bool result = p.Contain("Trinite");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+            bool isContained = p.Contain(wordToCheck);
 
-            Assert.IsTrue(result);
+            Assert.IsTrue(isContained);
         }
 
         [TestMethod]
         public void AddWord_UniqueWord_AddsToWordsFound()
         {
-            // Teste que la méthode AddWord ajoute correctement un mot à la liste wordsFound
-            Player player = new Player("Jinx");
+            // Teste que la méthode `AddWord` ajoute correctement un mot à la liste wordsFound
+            string playerName = "Jinx";
             string word = "Piltover";
-            player.AddWord(word, lettersInformation);
-            bool result = player.WordsFound.Contains("PILTOVER");
+            Player player = new Player(playerName);
 
-            Assert.IsTrue(result);
+            player.AddWord(word, lettersInformation);
+
+            bool isWordAdded = player.WordsFound.Contains("PILTOVER");
+            Assert.IsTrue(isWordAdded);
         }
 
         [TestMethod]
         public void AddWord_DuplicateWord_DoesNotAddToWordsFound()
         {
-            // Teste que la méthode AddWord n'ajoute pas un mot déjà trouvé
-            Player player = new Player("Jayce");
+            // Teste que la méthode `AddWord` n'ajoute pas un mot déjà trouvé
+            string playerName = "Jayce";
             string word = "Magie";
+            Player player = new Player(playerName);
             player.AddWord(word, lettersInformation);
             int scoreAfterFirstAdd = player.Score;
-            player.AddWord(word, lettersInformation);
-            List<string> result = player.WordsFound;
 
-            Assert.AreEqual(1, result.Count);
+            player.AddWord(word, lettersInformation);
+
+            List<string> wordsFound = player.WordsFound;
+            Assert.AreEqual(1, wordsFound.Count);
             Assert.AreEqual(scoreAfterFirstAdd, player.Score);
         }
 
         [TestMethod]
         public void AddWord_UniqueWord_UpdatesScoreCorrectly()
         {
-            // Teste que la méthode AddWord met à jour le score correctement en fonction des lettres
-            Player player = new Player("Viktor");
+            // Teste que la méthode `AddWord` met à jour le score correctement en fonction des lettres
+            string playerName = "Viktor";
             string word = "LOL";
-            player.AddWord(word, lettersInformation);
+            Player player = new Player(playerName);
             int expectedScore = lettersInformation['L'].Item1 + lettersInformation['O'].Item1 + lettersInformation['L'].Item1;
+
+            player.AddWord(word, lettersInformation);
 
             Assert.AreEqual(expectedScore, player.Score);
         }
@@ -174,16 +196,21 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void ToString_ShouldReturnCorrectPlayerDescription()
         {
-            // Teste que la méthode toString retourne une description correcte du joueur avec le nom, score et mots trouvés
-            Player player = new Player("Powder");
-            player.AddWord("Nexus", lettersInformation);
-            player.AddWord("Canon", lettersInformation);
-            string result = player.toString();
+            // Teste que la méthode `toString` retourne une description correcte du joueur avec le nom, score et mots trouvés
+            string playerName = "Powder";
+            string word1 = "Nexus";
+            string word2 = "Canon";
+            Player player = new Player(playerName);
+            player.AddWord(word1, lettersInformation);
+            player.AddWord(word2, lettersInformation);
             string expectedDescription = "Joueur : Powder \n" +
-                                         "Score : " + player.Score + " \n" +
-                                         "Mots trouvés : NEXUS ; CANON ; ";
+                                    "Score : " + player.Score + " \n" +
+                                    "Mots trouvés : NEXUS ; CANON ; ";
 
-            Assert.AreEqual(expectedDescription, result);
+            string actualDescription = player.toString();
+            
+
+            Assert.AreEqual(expectedDescription, actualDescription);
         }
 
         #endregion
@@ -214,7 +241,7 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void Roll_ShouldActualizeUsedLetters()
         {
-            // Teste que l'appel de Roll met à jour le compteur de lettres utilisées pour la lettre visible
+            // Teste que la méthode `Roll` met à jour le compteur de lettres utilisées pour la lettre visible
             Dice d = new Dice(random, lettersInformation);
             char letter = d.VisibleLetter;
             int result = Dice.UsedLetters[letter];
@@ -225,18 +252,18 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void ToString_ShouldReturnCorrectDiceDescription()
         {
-            // Teste que la méthode ToString retourne la description correcte des lettres du dé
+            // Teste que la méthode `toString` retourne la description correcte des lettres du dé
             var dice = new Dice(random, lettersInformation);
             var letters = dice.Letters;
             char visibleLetter = dice.VisibleLetter;
             string result = dice.toString();
-            string expected = "Lettre visible : " + visibleLetter + " \nEnsemble des lettres : ";
+            string expectedString = "Lettre visible : " + visibleLetter + " \nEnsemble des lettres : ";
             foreach (char Lettre in letters)
             {
-                expected += Lettre + " ; ";
+                expectedString += Lettre + " ; ";
             }
 
-            Assert.AreEqual(expected, result);
+            Assert.AreEqual(expectedString, result);
         }
 
         #endregion
@@ -247,120 +274,278 @@ namespace Boogle_Zoa_Tests
         [TestMethod]
         public void DictionaryWords_InitializeWords()
         {
-            // Teste la création d'un dictionnaire à partir d'un fichier, en vérifiant que le fichier est bien lu et que les mots sont stockés correctement.
-            DictionaryWords Dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
-            List<string> result = Dico.Words;
+            // Teste que la création d'un dictionnaire à partir d'un fichier, en vérifiant que le fichier est bien lu et que les mots sont stockés correctement.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            List<string> result = dico.Words;
 
-            CollectionAssert.AreEqual(TestWords, result);
+            CollectionAssert.AreEqual(testWords, result);
         }
 
         [TestMethod]
         public void DictionaryWords_InitializeStructures()
         {
-            // Teste les structure des dictionnaires "wordsBySize" et "wordsByLetter" après initialisation, en vérifiant qu'ils contiennent les bons mots par longueur et première lettre.
-            DictionaryWords Dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            // Teste que les structure des dictionnaires `wordsBySize` et `wordsByLetter` contiennent les bons mots par longueur et première lettre.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
 
-            foreach(int key in Dico.WordsBySize.Keys)
+            foreach(int key in dico.WordsBySize.Keys)
             {
-                CollectionAssert.AreEqual(TestWordsBySize[key], Dico.WordsBySize[key]);
+                CollectionAssert.AreEqual(testWordsBySize[key], dico.WordsBySize[key]);
             }
-            foreach (char key in Dico.WordsByLetter.Keys)
+            foreach (char key in dico.WordsByLetter.Keys)
             {
-                CollectionAssert.AreEqual(TestWordsByLetter[key], Dico.WordsByLetter[key]);
+                CollectionAssert.AreEqual(testWordsByLetter[key], dico.WordsByLetter[key]);
             }
         }
 
         [TestMethod]
-        // Teste l'affichage du dictionnaire avec `toString`, en vérifiant que la description générée correspond bien à la structure attendue.
-        public void Test_DictionaryWords_toString()
+        public void BubbleSort_ShouldSortList()
         {
+            // Teste que la méthode `BubbleSort` trie la liste de mots en paramètre correctement.
+            List<string> UnsortedList = new List<string>() { "HEXTECH", "PILTOVER", "DEMACIA", "ENFORCER" };
+            List<string> SortedList = new List<string>() { "DEMACIA", "ENFORCER", "HEXTECH", "PILTOVER" };
+            DictionaryWords.BubbleSort(UnsortedList);
 
+            CollectionAssert.AreEqual(SortedList, UnsortedList);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord1` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
-        public void Test_CheckWord1_WordPresent()
+        public void CheckWord1_WordPresent_ReturnsTrue()
         {
+            // Teste que la méthode `CheckWord1` renvoie `true` avec un mot présent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord1("Apple");
 
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord1` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
-        public void Test_CheckWord1_WordAbsent()
+        public void CheckWord1_WordAbsent_ReturnsFalse()
         {
+            // Teste que la méthode `CheckWord1` renvoie `false` avec un mot absent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord1("pple");
 
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord2` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
-        public void Test_CheckWord2_WordPresent()
+        public void CheckWord2_WordPresent_ReturnsTrue()
         {
+            // Teste que la méthode `CheckWord2` renvoie `true` avec un mot présent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord2("orange");
 
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord2` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
-        public void Test_CheckWord2_WordAbsent()
+        public void CheckWord2_WordAbsent_ReturnsFalse()
         {
+            // Teste que la méthode `CheckWord2` renvoie `false` avec un mot absent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord2("range");
 
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord3` avec un mot présent dans le dictionnaire, pour vérifier qu'elle renvoie bien `true`.
-        public void Test_CheckWord3_WordPresent()
+        public void CheckWord3_WordPresent_ReturnsTrue()
         {
+            // Teste que la méthode `CheckWord3` renvoie `true` avec un mot présent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord3("mAnDaRiN");
 
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord3` avec un mot absent du dictionnaire, pour vérifier qu'elle renvoie bien `false`.
-        public void Test_CheckWord3_WordAbsent()
+        public void CheckWord3_WordAbsent_ReturnsFalse()
         {
+            // Teste que la méthode `CheckWord3` renvoie `false` avec un mot absent dans le dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord3("mand arin");
 
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la recherche dichotomique `RecursiveBinarySearch` avec un mot présent dans la liste, pour vérifier qu'elle renvoie `true`.
-        public void Test_RecursiveBinarySearch_WordPresent()
+        public void RecursiveBinarySearch_WordPresent_ReturnsTrue()
         {
+            // Teste que la recherche dichotomique `RecursiveBinarySearch` renvoie `true` avec un mot présent dans la liste.
+            bool result = DictionaryWords.RecursiveBinarySearch("PLUM", testWords, 0, testWords.Count - 1);
 
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
-        // Teste la recherche dichotomique `RecursiveBinarySearch` avec un mot absent dans la liste, pour vérifier qu'elle renvoie `false`.
-        public void Test_RecursiveBinarySearch_WordAbsent()
+        public void RecursiveBinarySearch_WordAbsent_ReturnsFalse()
         {
+            // Teste que la recherche dichotomique `RecursiveBinarySearch` renvoie `false` avec un mot absent dans la liste.
+            bool result = DictionaryWords.RecursiveBinarySearch("PLU", testWords, 0, testWords.Count - 1);
 
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord1` avec un mot dont la taille n'existe pas dans `wordsBySize`, pour s'assurer qu'elle renvoie `false`.
-        public void Test_CheckWord1_SizeNotExist()
+        public void CheckWord1_SizeNotExist_ReturnsFalse()
         {
+            // Teste que la méthode `CheckWord1` renvoie `false` avec un mot dont la taille n'existe pas dans `wordsBySize`.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord1("STRAWBERRIES");
 
+            Assert.IsFalse(result);
+        }
+        
+        [TestMethod]
+        public void CheckWord2_LetterNotExist_ReturnsFalse()
+        {
+            // Teste que la méthode `CheckWord2` renvoie `false` avec un mot dont la première lettre n'existe pas dans `wordsByLetter`.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord2("EKKO");
+
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord2` avec un mot commençant par une lettre non présente dans `wordsByLetter`, pour vérifier qu'elle renvoie `false`.
-        public void Test_CheckWord2_LetterNotExist()
+        public void CheckWord3_SizeAndLetterNotExist_ReturnsFalse()
         {
+            // Teste que la méthode `CheckWord3` renvoie `false` avec un mot dont la taille n'existe pas dans `wordsBySize`.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            bool result = dico.CheckWord2("HELLICOPTEREEEE");
 
+            Assert.IsFalse(result);
         }
 
         [TestMethod]
-        // Teste la méthode `CheckWord3` avec un mot dont la taille et la première lettre ne sont pas présentes dans le dictionnaire, pour vérifier qu'elle renvoie `false`.
-        public void Test_CheckWord3_SizeAndLetterNotExist()
+        public void ToString_ShouldReturnCorrectDictionaryWordsDescription()
         {
+            // Teste que la méthode `toString` retourne la description correcte du dictionnaire.
+            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            string expectedString = "Description du Dictionnaire \n\n" +
+                            "Langue : EN \n\n" +
+                            "Nombre de mots par longueur :\n" +
+                            "3 : 1\n" +
+                            "4 : 5\n" +
+                            "5 : 8\n" +
+                            "6 : 4\n" +
+                            "7 : 3\n" +
+                            "8 : 1\n" +
+                            "9 : 4\n\n" +
+                            "Nombre de mots par lettre :\n" +
+                            "A : 3\n" +
+                            "B : 4\n" +
+                            "C : 2\n" +
+                            "D : 1\n" +
+                            "F : 1\n" +
+                            "G : 1\n" +
+                            "K : 1\n" +
+                            "L : 2\n" +
+                            "M : 4\n" +
+                            "O : 1\n" +
+                            "P : 4\n" +
+                            "R : 2\n" +
+                            "S : 1\n" +
+                            "T : 1\n" +
+                            "W : 1\n";
 
+            string result = dico.toString();
+
+            Assert.AreEqual(expectedString, result);
+        }
+
+
+        #endregion
+
+
+        #region Board.cs
+
+        [TestMethod]
+        public void Board_InitializeVisbleLetters()
+        {
+            // Teste que le constructeur initialise correctement le tableau des lettres visibles du plateau.
+            Board b = new Board(testDices);
+            char[] expectedLetters = { 'A', 'R', 'D', 'D', 'C', 'K', 'G', 'A', 'F', 'I', 'E', 'T', 'I', 'W', 'G', 'X' };
+            char[] result = b.VisibleLetter;
+
+            CollectionAssert.AreEqual(expectedLetters, result);
         }
 
         [TestMethod]
-        // Teste la Méthode 'BubbleSort' avec une liste de mot donnée, pour vérifier si il la trie correctement.
-        public void Test_BubbleSort_jspCommentOnNomme()
+        public void Board_InitializeBoardOfLetters()
         {
+            // Teste que le constructeur initialise correctement la matrice qui représente le plateau.
+            Board b = new Board(testDices);
+            char[,] expectedBoard = { { 'A', 'R', 'D', 'D' }, 
+                                      { 'C', 'K', 'G', 'A' }, 
+                                      { 'F', 'I', 'E', 'T' }, 
+                                      { 'I', 'W', 'G', 'X' } };
+            char[,] result = b.BoardOfLetters;
 
+            CollectionAssert.AreEqual(expectedBoard, result);
         }
 
+        [TestMethod]
+        public void GameBoardTest_WordPresent_ReturnTrue()
+        {
+            // Teste que la méthode `GameBoardTest` renvoie `true` avec un mot présent sur le plateau.
+            Board b = new Board(testDices);
+            bool result = b.GameBoardTest("fig", testDictionnary);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void GameBoardTest_WordAbsent_ReturnFalse()
+        {
+            // Teste que la méthode `GameBoardTest` renvoie `false` avec un mot absent sur le plateau.
+            Board b = new Board(testDices);
+            bool result = b.GameBoardTest("LIME", testDictionnary);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void FindAllWordPaths_WordPresentOnce_ReturnListOfOneElement()
+        {
+            // Test que la méthode `FindAllWordPaths` renvoie une liste de taille 1 qui contient les coordonnées des lettres avec un mot présent en une fois sur le plateau.
+            Board b = new Board(testDices);
+            List<List<(int,int)>> result = b.FindAllWordPaths("Kiwi");
+
+            Assert.AreEqual(result.Count, 1);
+        }
+
+        [TestMethod]
+        public void FindAllWordPaths_WordPresentTwice_ReturnListOfTwoElement()
+        {
+            // Test que la méthode `FindAllWordPaths` renvoie une liste de taille 2 qui contient les coordonnées des lettres avec un mot présent en deux fois sur le plateau.
+            Board b = new Board(testDices);
+            List<List<(int, int)>> result = b.FindAllWordPaths("fiG");
+
+            Assert.AreEqual(result.Count, 2);
+        }
+
+        [TestMethod]
+        public void FindAllWordPaths_WordAbsent_ReturnListOfZeroElement()
+        {
+            // Test que la méthode `FindAllWordPaths` renvoie une liste de taille 0 avec un mot absent sur le plateau.
+            Board b = new Board(testDices);
+            List<List<(int, int)>> result = b.FindAllWordPaths("PEAR");
+
+            Assert.AreEqual(result.Count, 0);
+        }
+
+        [TestMethod]
+        public void ToString_ShouldReturnCorrectBoardDescription()
+        {
+            // Test que la méthode `toString` retourne la description correcte du plateau de jeu.
+            Board b = new Board(testDices);
+            string expectedString = "A R D D \n" +
+                                    "C K G A \n" +
+                                    "F I E T \n" +
+                                    "I W G X \n";
+
+            Assert.AreEqual(expectedString, b.toString());
+        }
 
         #endregion
     }

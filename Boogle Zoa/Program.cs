@@ -61,15 +61,29 @@
 
             Console.WriteLine(B.toString());
 
-            DictionaryWords Dico = new DictionaryWords("../../../data/MotsPossiblesFR.txt", "FR");
+            //DictionaryWords Dico = new DictionaryWords("../../../data/MotsPossiblesFR.txt", "FR");
             
-            string word = Console.ReadLine();
+            
 
-            Console.WriteLine(B.GameBoardTest(word, Dico));
+            List<string> sameLengthWords = [];
+            List<string> sameLetterWords = ["cc", "aa", "bb"];
 
-           
-        } 
-        
+            foreach (string d in sameLengthWords)
+            {
+                Console.WriteLine(d);
+            }
+
+            TimeSpan secSpan = TimeSpan.FromSeconds(30);
+
+            Game g = new Game(2, secSpan, 3, 4, "FR");
+
+            g.InitializePlayerName();
+            g.Start();
+            
+
+            
+        }
+
         #region SauvegardeDatajensaisrien
         public int FindWord(string word, char[,] board, int x, int y, int index = 0)
         {

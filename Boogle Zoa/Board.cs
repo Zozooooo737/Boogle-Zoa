@@ -11,7 +11,7 @@
         private char[] visibleLetters;
         private char[,] boardOfLetters;
         private const int size = 16;
-        private const int side = 4;
+        private const int side = 4; 
 
         private static readonly (int, int)[] Directions = new (int, int)[]
         {
@@ -26,6 +26,7 @@
         /// Crée un plateau de jeu à partir d'une liste de dés (<paramref name="dices"/>).
         /// </summary>
         /// <param name="d">Liste de dés (<see cref="Dice"/>)</param>
+        /// Update : Réalise une matrice à partir de n'importe quelle taille de `dices` (entre 4 et 32 par exemple)
         public Board(Dice[] dices)
         {
             this.dices = dices;
@@ -53,22 +54,20 @@
 
 
         /// <summary>
-        /// Renvoie une chaîne de caractères <c>string</c> qui affiche le plateau de jeu (<see cref="boardOfLetters"/>).
+        /// Renvoie la liste des lettres visibles (<see cref="visibleLetters"/>) sur le plateau.
         /// </summary>
-        /// <returns>Renvoie une chaîne de caractères <c>string</c> structurée.</returns>
-        public string toString()
+        public char[] VisibleLetter
         {
-            string description = "";
+            get { return visibleLetters; }
+        }
 
-            for (int i = 0; i < side; i++)
-            {
-                for (int j = 0; j < side; j++)
-                {
-                    description += boardOfLetters[i,j] + " ";
-                }
-                description += "\n";
-            }
-            return description;
+
+        /// <summary>
+        /// Renvoie le plateau de lettres (<see cref="BoardOfLetters"/>).
+        /// </summary>
+        public char[,] BoardOfLetters
+        {
+            get { return boardOfLetters; }
         }
 
 
@@ -80,17 +79,22 @@
         /// <returns>
         /// <c>true</c> si le mot est présent sur le plateau de jeu ; sinon, <c>false</c>.
         /// </returns>
+        /// Update : Renvoie la liste `allPaths` au lieu d'un bool / ou utiliser directement `FindAllWordPath`.
         public bool GameBoardTest(string word, DictionaryWords dico)
         {
             bool wordFound = false;
 
-            List<List<(int, int)>> allPaths = new List<List<(int, int)>>();
-            allPaths = FindAllWordPaths(word);
-
-            if (allPaths.Count > 0)
+            if (dico.CheckWord3(word))
             {
-                wordFound = true;
+                List<List<(int, int)>> allPaths = new List<List<(int, int)>>();
+                allPaths = FindAllWordPaths(word);
+
+                if (allPaths.Count > 0)
+                {
+                    wordFound = true;
+                }
             }
+            
             return wordFound;
         }
 
@@ -105,7 +109,7 @@
         /// A termes, le joueur pourra choisir laquelle de ces possibilités il souhaite compter, afin de gérer le cas où un mot serait présent plusieurs fois sur le plateau.
         public List<List<(int, int)>> FindAllWordPaths(string word)
         {
-            List<List<(int, int)>> allPaths = new List<List<(int, int)>>(); 
+            List<List<(int, int)>> allPaths = new List<List<(int, int)>> { };
             word = word.ToUpper();
 
             for (int x = 0; x < boardOfLetters.GetLength(0); x++)
@@ -156,6 +160,26 @@
                 }
             }
             path.RemoveAt(path.Count - 1);
+        }
+
+
+        /// <summary>
+        /// Renvoie une chaîne de caractères <c>string</c> qui affiche le plateau de jeu (<see cref="boardOfLetters"/>).
+        /// </summary>
+        /// <returns>Renvoie une chaîne de caractères <c>string</c> structurée.</returns>
+        public string toString()
+        {
+            string description = "";
+
+            for (int i = 0; i < side; i++)
+            {
+                for (int j = 0; j < side; j++)
+                {
+                    description += boardOfLetters[i, j] + " ";
+                }
+                description += "\n";
+            }
+            return description;
         }
     }
 }

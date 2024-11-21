@@ -20,10 +20,13 @@
         /// <param name="language">Langue du dictionnaire</param>
         /// En un parcours de la liste words, on parvient à remplir les deux dictionnaires.
         /// A la fin du parcours, on trie chaque liste présente dans les 2 dictionnaires afin de faciliter le travail des algorithmes de recherche.
+        /// Si le fichier n'existe pas, on catch l'erreur et initialise `words` avec une liste vide.
         /// Optimisation de la Mémoire --> On initialise "int n" et "int c" à l'extérieur de la boucle "foreach" pour réaliser que 2 allocations au lieu de 2*n.
         /// Optimisation de la Mémoire --> Les clés des deux dictionnaire "wordsBySize" et "wordsByLetter" ne sont pas prédéfinies afin de gagner en espace de mémoire. Exemple : si dans mon fichier, aucun mot ne commence par la lettre "F", le couple {'F', List'string'} ne sera pas présent dans wordsByLetter.
         public DictionaryWords(string filePath, string language)
         {
+            this.language = language;
+
             try
             {
                 string content = File.ReadAllText(filePath);
@@ -31,11 +34,10 @@
             }
             catch(FileNotFoundException f)
             {
+                words = [];
                 Console.WriteLine("Le fichier n'existe pas " + f.Message);
                 return;
             }
-
-            this.language = language;
 
             int n;
             char c;
@@ -109,7 +111,7 @@
         /// <param name="list">Liste de mots à trier</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir une complexité de O(n) dans le meilleur des cas, et une complexité de O(n²) dans le pire des cas.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable "temp" en dehors des boucles, pour réduire l'allocation de la mémoire à 1 case. 
-        private void BubbleSort(List<string> list)
+        public static void BubbleSort(List<string> list)
         {
             int n = list.Count;
             bool swapped;
@@ -130,6 +132,134 @@
                 }
                 n--;
             } while (swapped);
+        }
+
+
+        /// <summary>
+        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
+        /// </summary>
+        /// <param name="word">Mot à vérifier</param>
+        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
+        /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
+        /// Avant de récupérer la liste restreinte qui contient potentiellement le mot, on vérifie que la clé correspondant au mot existe dans le dictionnaire, afin de ne pas générer une erreur de type `KeyNotFoundException`.
+        /// Tentative 1 : On récupère la liste des mots qui ont la même taille que "word", et on effectue une recherche dichotomique dans cette liste.
+        public bool CheckWord1(string word)
+        {
+            bool exist = false;
+
+            word = word.ToUpper();
+            int n = word.Length;
+
+            if (wordsBySize.ContainsKey(n))
+            {
+                List<string> sameLengthWords = wordsBySize[n];
+                exist = RecursiveBinarySearch(word, sameLengthWords, 0, sameLengthWords.Count - 1);
+            }
+            return exist;
+        }
+
+
+        /// <summary>
+        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
+        /// </summary>
+        /// <param name="word">Mot à vérifier</param>
+        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
+        /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
+        /// On vérifie que les clés sont présents dans les dictionnaires  avant de les utiliser pour éviter une erreur de type `KeyNotFoundException`.
+        /// En effet, le mot existe dans le dictionnaire si et seulement si ses 2 clés sont présentes dans leur dictionnaire respectif.
+        /// Tentative 2 : On récupère la liste des mots qui ont la même taille que "word" et la liste des mots qui commence par la même lettre que "word".
+        ///               On effectue une recherche dichotomique sur la liste la plus petite.
+        /// Optimisation de la Mémoire : On effectue 2 "return" pour éviter de recréer une liste de "string" qui occupera un espace dans la mémoire inutile.
+        public bool CheckWord2(string word)
+        {
+            bool exist = false;
+
+            word = word.ToUpper();
+            int n = word.Length;
+            char c = word[0];
+
+            if (wordsBySize.ContainsKey(n) && wordsByLetter.ContainsKey(c))
+            {
+                List<string> sameLengthWords = wordsBySize[n];
+                List<string> sameLetterWords = wordsByLetter[c];
+
+                if (sameLengthWords.Count < sameLetterWords.Count)
+                {
+                    exist = RecursiveBinarySearch(word, sameLengthWords, 0, sameLengthWords.Count-1);
+                }
+                else
+                {
+                    exist = RecursiveBinarySearch(word, sameLetterWords, 0, sameLetterWords.Count - 1);
+                }
+            }
+            
+            return exist;
+        }
+
+
+        /// <summary>
+        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
+        /// </summary>
+        /// <param name="word">Mot à vérifier</param>
+        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
+        /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
+        /// On vérifie que les clés sont présents dans les dictionnaires  avant de les utiliser pour éviter une erreur de type `KeyNotFoundException`.
+        /// En effet, le mot existe dans le dictionnaire si et seulement si ses 2 clés sont présentes dans leur dictionnaire respectif.        /// La méthode "Intersect" renvoie une liste de type "IEnumerable" de string, nous devons la convertir en "List" avec la méthode "ToList()".
+        /// Tentative 3 : On récupère la liste des mots qui ont la même taille que "word" et la liste des mots qui commence par la même lettre que "word".
+        ///               On effectue une recherche dichotomique sur l'intersection de ces 2 listes.
+        public bool CheckWord3(string word)
+        {
+            bool exist = false;
+            
+            word = word.ToUpper();
+            int n = word.Length;
+            char c = word[0];
+
+            if (wordsBySize.ContainsKey(n) && wordsByLetter.ContainsKey(c))
+            {
+                List<string> sameLengthWords = wordsBySize[n];
+                List<string> sameLetterWords = wordsByLetter[c];
+
+                List<string> commonWords = sameLengthWords.Intersect(sameLetterWords).ToList();
+                exist = RecursiveBinarySearch(word, commonWords, 0, commonWords.Count - 1);
+            }
+            return exist;
+        }
+
+
+        /// <summary>
+        /// Réalise une recherche dichotomique pour trouver un mot (<paramref name="mot"/>) dans une liste de mot (<paramref name="list"/>).
+        /// </summary>
+        /// <param name="mot">Mot à trouver</param>
+        /// <param name="list">Liste dans laquelle on cherche le mot</param>
+        /// <param name="min">Indice délimitant la borne inférieure</param>
+        /// <param name="max">Indice délimitant la borne supérieure</param>
+        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
+        /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
+        /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.
+        public static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
+        {
+            if (min > max || list == null || list.Count == 0)
+            {
+                return false;
+            }
+
+            int mid = (min + max) / 2;
+
+            int comparaison = string.Compare(word, list[mid]);
+
+            if (comparaison == 0)
+            {
+                return true;
+            }
+            else if (comparaison < 0)
+            {
+                return RecursiveBinarySearch(word, list, min, mid - 1);
+            }
+            else
+            {
+                return RecursiveBinarySearch(word, list, mid + 1, max);
+            }
         }
 
 
@@ -170,109 +300,6 @@
             }
 
             return description;
-        }
-
-
-        /// <summary>
-        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
-        /// </summary>
-        /// <param name="word">Mot à vérifier</param>
-        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
-        /// Tentative 1 : On récupère la liste des mots qui ont la même taille que "word", et on effectue une recherche dichotomique dans cette liste.
-        public bool CheckWord1(string word)
-        {
-            word = word.ToUpper();
-
-            int n = word.Length;
-            List<string> sameLengthWords = wordsBySize[n];
-
-            return RecursiveBinarySearch(word, sameLengthWords, 0, sameLengthWords.Count - 1);
-        }
-
-
-        /// <summary>
-        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
-        /// </summary>
-        /// <param name="word">Mot à vérifier</param>
-        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
-        /// Tentative 2 : On récupère la liste des mots qui ont la même taille que "word" et la liste des mots qui commence par la même lettre que "word".
-        ///               On effectue une recherche dichotomique sur la liste la plus petite.
-        /// Optimisation de la Mémoire : On effectue 2 "return" pour éviter de recréer une liste de "string" qui occupera un espace dans la mémoire inutile.
-        public bool CheckWord2(string word)
-        {
-            word = word.ToUpper();
-
-            int n = word.Length;
-            char c = word[0];
-            List<string> sameLengthWords = wordsBySize[n];
-            List<string> sameLetterhWords = wordsByLetter[c];
-
-            if (sameLengthWords.Count < sameLetterhWords.Count)
-            {
-                return RecursiveBinarySearch(word, sameLengthWords, 0, sameLengthWords.Count - 1);
-            }
-            else
-            {
-                return RecursiveBinarySearch(word, sameLetterhWords, 0, sameLetterhWords.Count - 1);
-            }
-        }
-
-
-        /// <summary>
-        /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
-        /// </summary>
-        /// <param name="word">Mot à vérifier</param>
-        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
-        /// Tentative 3 : On récupère la liste des mots qui ont la même taille que "word" et la liste des mots qui commence par la même lettre que "word".
-        ///               On effectue une recherche dichotomique sur l'intersection de ces 2 listes.
-        /// La méthode "Intersect" renvoie une liste de type "IEnumerable" de string, nous devons la convertir en "List" avec la méthode "ToList()".
-        public bool CheckWord3(string word)
-        {
-            word = word.ToUpper();
-
-            int n = word.Length;
-            char c = word[0];
-            List<string> sameLengthWords = wordsBySize[n];
-            List<string> sameLetterWords = wordsByLetter[c];
-
-            List<string> commonWords = sameLengthWords.Intersect(sameLetterWords).ToList();
-
-            return RecursiveBinarySearch(word, commonWords, 0, commonWords.Count - 1);
-        }
-
-
-        /// <summary>
-        /// Réalise une recherche dichotomique pour trouver un mot (<paramref name="mot"/>) dans une liste de mot (<paramref name="list"/>).
-        /// </summary>
-        /// <param name="mot">Mot à trouver</param>
-        /// <param name="list">Liste dans laquelle on cherche le mot</param>
-        /// <param name="min">Indice délimitant la borne inférieure</param>
-        /// <param name="max">Indice délimitant la borne supérieure</param>
-        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
-        /// Recursive Binary Search = Recherche Dichotomique Recursive
-        public bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
-        {
-            if (min > max)
-            {
-                return false;
-            }
-
-            int mid = (min + max) / 2;
-
-            int comparaison = string.Compare(word, list[mid]);
-
-            if (comparaison == 0)
-            {
-                return true;
-            }
-            else if (comparaison < 0)
-            {
-                return RecursiveBinarySearch(word, list, min, mid - 1);
-            }
-            else
-            {
-                return RecursiveBinarySearch(word, list, mid + 1, max);
-            }
         }
     }
 }
