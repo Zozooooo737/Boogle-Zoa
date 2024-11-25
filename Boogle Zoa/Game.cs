@@ -33,7 +33,6 @@ namespace Boogle_Zoa
         }
 
 
-
         public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRound, int sizeOfBoard, string language)
         {
             this.numberOfPlayers = numberOfPlayers;

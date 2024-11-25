@@ -78,7 +78,7 @@ namespace Boogle_Zoa_Tests
 
         readonly Dice[] testDices = { new Dice('A'), new Dice('R'), new Dice('D'), new Dice('D'), new Dice('C'), new Dice('K'), new Dice('G'), new Dice('A'), new Dice('F'), new Dice('I'), new Dice('E'), new Dice('T'), new Dice('I'), new Dice('W'), new Dice('G'), new Dice('X') };
 
-        readonly DictionaryWords testDictionnary = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+        readonly DictionaryWords testDictionnary = new DictionaryWords("");
 
         #region Player.cs
 
@@ -275,7 +275,7 @@ namespace Boogle_Zoa_Tests
         public void DictionaryWords_InitializeWords()
         {
             // Teste que la création d'un dictionnaire à partir d'un fichier, en vérifiant que le fichier est bien lu et que les mots sont stockés correctement.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             List<string> result = dico.Words;
 
             CollectionAssert.AreEqual(testWords, result);
@@ -285,7 +285,7 @@ namespace Boogle_Zoa_Tests
         public void DictionaryWords_InitializeStructures()
         {
             // Teste que les structure des dictionnaires `wordsBySize` et `wordsByLetter` contiennent les bons mots par longueur et première lettre.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
 
             foreach(int key in dico.WordsBySize.Keys)
             {
@@ -312,7 +312,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord1_WordPresent_ReturnsTrue()
         {
             // Teste que la méthode `CheckWord1` renvoie `true` avec un mot présent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord1("Apple");
 
             Assert.IsTrue(result);
@@ -322,7 +322,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord1_WordAbsent_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord1` renvoie `false` avec un mot absent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord1("pple");
 
             Assert.IsFalse(result);
@@ -332,7 +332,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord2_WordPresent_ReturnsTrue()
         {
             // Teste que la méthode `CheckWord2` renvoie `true` avec un mot présent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord2("orange");
 
             Assert.IsTrue(result);
@@ -342,7 +342,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord2_WordAbsent_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord2` renvoie `false` avec un mot absent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord2("range");
 
             Assert.IsFalse(result);
@@ -352,7 +352,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord3_WordPresent_ReturnsTrue()
         {
             // Teste que la méthode `CheckWord3` renvoie `true` avec un mot présent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord3("mAnDaRiN");
 
             Assert.IsTrue(result);
@@ -362,7 +362,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord3_WordAbsent_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord3` renvoie `false` avec un mot absent dans le dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord3("mand arin");
 
             Assert.IsFalse(result);
@@ -390,7 +390,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord1_SizeNotExist_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord1` renvoie `false` avec un mot dont la taille n'existe pas dans `wordsBySize`.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord1("STRAWBERRIES");
 
             Assert.IsFalse(result);
@@ -400,7 +400,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord2_LetterNotExist_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord2` renvoie `false` avec un mot dont la première lettre n'existe pas dans `wordsByLetter`.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord2("EKKO");
 
             Assert.IsFalse(result);
@@ -410,7 +410,7 @@ namespace Boogle_Zoa_Tests
         public void CheckWord3_SizeAndLetterNotExist_ReturnsFalse()
         {
             // Teste que la méthode `CheckWord3` renvoie `false` avec un mot dont la taille n'existe pas dans `wordsBySize`.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             bool result = dico.CheckWord2("HELLICOPTEREEEE");
 
             Assert.IsFalse(result);
@@ -420,7 +420,7 @@ namespace Boogle_Zoa_Tests
         public void ToString_ShouldReturnCorrectDictionaryWordsDescription()
         {
             // Teste que la méthode `toString` retourne la description correcte du dictionnaire.
-            DictionaryWords dico = new DictionaryWords("../../../../Boogle Zoa/data/TestWords.txt", "EN");
+            DictionaryWords dico = new DictionaryWords("");
             string expectedString = "Description du Dictionnaire \n\n" +
                             "Langue : EN \n\n" +
                             "Nombre de mots par longueur :\n" +

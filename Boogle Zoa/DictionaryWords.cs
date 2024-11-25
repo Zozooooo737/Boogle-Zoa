@@ -36,6 +36,10 @@
             {
                 filePath = "../../../data/MotsPossiblesEN.txt";
             }
+            else
+            {
+                filePath = "../../../../Boogle Zoa/data/TestWords.txt";
+            }
 
 
             try
@@ -53,7 +57,7 @@
             int n;
             char c;
 
-            words.Sort(); // BubbleSort met plus de 30 minutes à s'exécuter chiantos
+            QuickSort(words, 0, words.Count - 1);
             
             foreach (string word in words) 
             {
@@ -138,6 +142,51 @@
                 }
                 n--;
             } while (swapped);
+        }
+
+
+        /// <summary>
+        /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri rapide.
+        /// </summary>
+        /// <param name="list">Liste de mots à trier</param>
+        /// <param name="start">Index de début</param>
+        /// <param name="end">INdex de fin</param>
+        /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
+        /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
+        public static void QuickSort(List<string> list, int start, int end)
+        {
+            if (end - start < 1) return;
+
+            // On prend comme pivot l'élément à droite (dernier élément)
+            string pivot = list[end];
+            int wall = start;
+            int current = start;
+            string temp;
+
+            while (current < end)
+            {
+                if (string.Compare(list[current], pivot) < 0)
+                {
+                    if (wall != current)
+                    {
+                        // On échange les éléments à l'index current et wall
+                        temp = list[current];
+                        list[current] = list[wall];
+                        list[wall] = temp;
+                    }
+                    wall++;
+                }
+                current++;
+            }
+
+            // On place le pivot à la bonne position en l'échangeant avec l'élément à l'index wall
+            string tmpPivot = list[wall];
+            list[wall] = list[end];
+            list[end] = tmpPivot;
+
+            // On trie les sous-tableaux à gauche et à droite du pivot
+            QuickSort(list, start, wall - 1);
+            QuickSort(list, wall + 1, end);
         }
 
 
@@ -304,7 +353,6 @@
                     description += $"{alpha[i]} : {wordsByLetter[alpha[i]].Count}\n";
                 }
             }
-
             return description;
         }
     }
