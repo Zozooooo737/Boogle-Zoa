@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Media;
 
 namespace Boogle_Zoa
 {
@@ -26,6 +27,10 @@ namespace Boogle_Zoa
 
         static void Main(string[] args)
         {
+
+            SoundPlayer player = new SoundPlayer("../../../../Boogle Zoa/ressource/music/Music_Intro.wav");
+            player.Play();
+
             SetupConsole();
 
             DisplayWelcome();
@@ -66,6 +71,8 @@ namespace Boogle_Zoa
 
         public static void DisplayWelcome()
         {
+            ConsoleKey key;
+
             Console.WriteLine(new string(border, width));
             DisplayCentered("", 4);
             DisplayCentered("  ____     ___     ___     ____   _       _____     _____   ___      _    ");
@@ -74,13 +81,18 @@ namespace Boogle_Zoa
             DisplayCentered(" | |_) | | |_| | | |_| | | |_| | | |___  | |___     / /_  | |_| | / ___ \\ ");
             DisplayCentered(" |____/   \\___/   \\___/   \\____| |_____| |_____|   /____|  \\___/ /_/   \\_\\"); //74
             DisplayCentered("", 3);
-            DisplayCentered("Press any key to start !");
+            DisplayCentered("Press Enter to start !");
             DisplayCentered("", 3);
             DisplayCentered("By Noa & Enzo");
             DisplayCentered("", 1);
             Console.Write(new string(border, width));
 
-            Console.ReadKey();
+            do
+            {
+                key = Console.ReadKey(true).Key;
+            }
+            while(key != ConsoleKey.Enter);
+
             Console.Clear();
         }
 
@@ -127,6 +139,14 @@ namespace Boogle_Zoa
             return selected;
         }
 
+
+        public static int Menu()
+        {
+            // Réaliser une méthode qui permet d'afficher un menu à partir d'une liste d'options.
+            // Renvoie un int qui corresponds à l'option choisi par l'utilisateur.
+
+            return 0;
+        }
 
 
         public static void DisplayCentered(string text = "", int n = 1, bool selected=false)
