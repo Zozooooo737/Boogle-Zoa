@@ -65,6 +65,7 @@ namespace Boogle_Zoa
 
                 players[i] = new Player(name);
             }
+            Console.Clear();
         }
 
 

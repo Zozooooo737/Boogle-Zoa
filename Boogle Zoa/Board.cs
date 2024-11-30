@@ -10,8 +10,8 @@
         private Dice[] dices;
         private char[] visibleLetters;
         private char[,] boardOfLetters;
-        private const int size = 16;
-        private const int side = 4; 
+        private int size;
+        private int side; 
 
         private static readonly (int, int)[] Directions = new (int, int)[]
         {
@@ -30,6 +30,10 @@
         public Board(Dice[] dices)
         {
             this.dices = dices;
+
+            size = dices.Length;
+            side = Convert.ToInt32(Math.Sqrt(dices.Length));
+
             visibleLetters = new char[size];
 
             for (int i = 0; i < size; i++)
