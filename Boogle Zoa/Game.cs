@@ -51,19 +51,12 @@ namespace Boogle_Zoa
 
 
         // Ecris message de validité
-        public void InitializePlayerName()
+        public void GetNameOfPlayers(string[] names)
         {
             for(int i = 0; i < numberOfPlayers; i++)
             {
-                string name = "";
-                do
-                {
-                    Console.WriteLine($"Player {i + 1} - Enter your name :");
-                    name = Console.ReadLine();
-                }
-                while ( name == "" || name == null );
-
-                players[i] = new Player(name);
+                Player p = new Player(names[i]);
+                players[i] = p;
             }
             Console.Clear();
         }
@@ -82,7 +75,7 @@ namespace Boogle_Zoa
 
                 for (int p = 0; p < numberOfPlayers; p++)
                 {
-                    duration = timePerRound;
+                    duration =timePerRound;
                     startTime = DateTime.Now;
                     endTime = startTime + duration;
 

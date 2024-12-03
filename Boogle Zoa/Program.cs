@@ -116,7 +116,7 @@ namespace Boogle_Zoa
                 Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language);
 
                 // Initialise les noms des joueurs.
-                g.InitializePlayerName();
+                g.GetNameOfPlayers(InitializePlayerName());
 
                 // Lance le déroulement du jeu.
                 g.Process();
@@ -131,7 +131,7 @@ namespace Boogle_Zoa
                     // Liste des options de configuration affichées dans le menu.
                     string[] options = {
                                         $"NUMBER OF PLAYERS : {numberOfPlayer}",
-                                        $"TIME PER ROUND : {timePerRound.ToString(@"hh\:mm")}",
+                                        $"TIME PER ROUND : {timePerRound.ToString(@"mm\:ss")}",
                                         $"NUMBER OF ROUNDS : {numberOfRound}",
                                         $"SIZE OF BOARD : {sizeOfBoard}",
                                         $"LANGUAGE : {language}",
@@ -145,28 +145,27 @@ namespace Boogle_Zoa
                     {
                         case 0:
                             // Modifie le nombre de joueurs.
-                            numberOfPlayer = Convert.ToInt32(Console.ReadLine());
+                            numberOfPlayer = GetValideNumber("Entrez un nombre de joueurs entre 2 et 5 :", 2, 5);
                             break;
 
                         case 1:
                             // Modifie le temps par manche.
-                            string timeString = Console.ReadLine();
-                            timePerRound = TimeSpan.Parse(timeString);
+                            timePerRound = GetValideTime("Entrez un temps par manche entre 00:10 et 02:00 :", "00:00:10", "00:02:00");
                             break;
 
                         case 2:
                             // Modifie le nombre de manches.
-                            numberOfRound = Convert.ToInt32(Console.ReadLine());
+                            numberOfRound = GetValideNumber("Entrez un nombre de manchesentre 1 et 6 :", 1, 6);
                             break;
 
                         case 3:
                             // Modifie la taille du plateau.
-                            sizeOfBoard = Convert.ToInt32(Console.ReadLine());
+                            sizeOfBoard = GetValideNumber("Entrez une taille de matrice entre 3 et 10 :", 3, 10);
                             break;
 
                         case 4:
                             // Modifie la langue.
-                            language = Console.ReadLine().ToUpper();
+                            language = GetValideWord("Entrez une langue entre FR et EN :", ["FR", "EN"]);
                             break;
 
                         case 5:
@@ -178,7 +177,8 @@ namespace Boogle_Zoa
 
                 // Crée et lance une nouvelle partie avec les paramètres configurés.
                 Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language);
-                g.InitializePlayerName();
+
+                g.GetNameOfPlayers(InitializePlayerName());
                 g.Process();
             }
             else
@@ -209,7 +209,7 @@ namespace Boogle_Zoa
 
 
         /// <summary>
-        /// Affiche l'écran d'accueil avec un message de bienvenue et un design personnalisé.<br/>
+        /// Affiche la fenêtre d'accueil avec un message de bienvenue et un design personnalisé.<br/>
         /// L'utilisateur peut démarrer en appuyant sur la touche Entrée.
         /// </summary>
         public static void DisplayWelcome()
@@ -241,7 +241,7 @@ namespace Boogle_Zoa
 
 
         /// <summary>
-        /// Affiche le menu principal avec plusieurs options et permet à l'utilisateur de faire un choix.
+        /// Affiche la fenêtre du menu principal avec plusieurs options et permet à l'utilisateur de faire un choix.
         /// </summary>
         /// <returns>
         /// Un entier représentant l'option sélectionnée par l'utilisateur :
@@ -265,11 +265,21 @@ namespace Boogle_Zoa
 
 
         /// <summary>
-        /// Affiche un message d'au revoir à l'utilisateur.
+        /// Affiche la fenêtre du message d'au revoir à l'utilisateur.
         /// </summary>
         public static void DisplayGoodbye()
         {
-            Console.WriteLine("A FAIRE");
+            Console.WriteLine(new string(border, width));
+            DisplayCentered("", 6);
+            DisplayCentered("   _____   _   _   ____  ");
+            DisplayCentered(" | ____| | \\ | | |  _ \\ ");
+            DisplayCentered(" |  _|   |  \\| | | | | |");
+            DisplayCentered(" | |___  | |\\  | | |_| |");
+            DisplayCentered(" |_____| |_| \\_| |____/");
+            DisplayCentered("", 7);
+            Console.Write(new string(border, width));
+            Thread.Sleep(5000);
+            Console.Clear();
         }
 
 
@@ -284,7 +294,26 @@ namespace Boogle_Zoa
 
 
         /// <summary>
-        /// Affiche un menu interactif dans la console à partir d'une liste d'options, 
+        /// Joue un son de transition
+        /// </summary>
+        public static void PlaySoundButton1()
+        {
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/SoundEffect_Button1.wav");
+            sound.Play();
+        }
+
+        /// <summary>
+        /// Joue un son de bouton cliqué
+        /// </summary>
+        public static void PlaySoundButton2()
+        {
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/SoundEffect_Button2.wav");
+            sound.Play();
+        }
+
+
+        /// <summary>
+        /// Affiche un menu interactif sous forme de fenêtre à partir d'une liste d'options, 
         /// permettant à l'utilisateur de naviguer avec les flèches du clavier et de sélectionner une option.
         /// </summary>
         /// <param name="options">Tableau de chaînes de caractères représentant les options du menu.</param>
@@ -299,22 +328,22 @@ namespace Boogle_Zoa
         /// <item><description><c>Entrée</c> : valider la sélection.</description></item>
         /// </list>
         /// </remarks>
+        /// Optimisation --> On vérifie que la touche préssée corresponds à une touche possible pour éviter de rafraichir pour rien.
         public static int Menu(string[] options)
         {
-
-            // Réaliser une méthode qui permet d'afficher un menu à partir d'une liste d'options.
-            // Renvoie un int qui corresponds à l'option choisi par l'utilisateur
-
             ConsoleKey key;
             int selected = 0;
             int size = options.Length;
 
+            ConsoleKey[] keys = { ConsoleKey.DownArrow, ConsoleKey.UpArrow, ConsoleKey.Enter };
+
             do
             {
+                PlaySoundButton2();
+
                 Console.Clear();
                 Console.WriteLine(new string(border, width));
-
-                DisplayCentered("", (height-1-(size*2))/2); //////////////////////////////////
+                DisplayCentered("", (height-1-(size*2))/2);
 
                 for (int i = 0; i < size; i++)
                 {
@@ -329,15 +358,28 @@ namespace Boogle_Zoa
                     DisplayCentered("", 1);
                 }
 
-                DisplayCentered("", (height - 1 - (size * 2)) / 2); /////////////////////////////////
+                DisplayCentered("", (height - 1 - (size * 2)) / 2);
                 Console.Write(new string(border, width));
 
-                key = Console.ReadKey().Key;
+                do
+                {
+                    key = Console.ReadKey(true).Key;
+                }
+                while (!keys.Contains(key));
+                
 
-                if (key == ConsoleKey.DownArrow) selected = (selected + 1) % size;
-                else if (key == ConsoleKey.UpArrow) selected = Math.Abs((selected - 1) % size);
+                if (key == ConsoleKey.DownArrow)
+                {
+                    selected = (selected + 1) % size;
+                }
+                else if (key == ConsoleKey.UpArrow)
+                {
+                    selected = (selected - 1 + size) % size;
+                }
             }
             while (key != ConsoleKey.Enter);
+
+            PlaySoundButton1();
 
             Console.Clear();
 
@@ -346,11 +388,173 @@ namespace Boogle_Zoa
 
 
         /// <summary>
-        /// Affiche un texte
+        /// Initialise les noms des joueurs en demandant à chaque joueur de saisir son nom.<br/>
+        /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="n"></param>
-        /// <param name="selected"></param>
+        /// <returns>Un tableau contenant les noms des joueurs.</returns>
+        /// <remarks>
+        /// Si un joueur entre un nom vide, un message d'erreur est affiché et la saisie est demandée à nouveau.
+        /// </remarks>
+        public static string[] InitializePlayerName()
+        {
+            string[] nameOfPlayers = new string[numberOfPlayer];
+
+            for (int i = 0; i < numberOfPlayer; i++)
+            {
+                while (true)
+                {
+                    Console.WriteLine(new string(border, width));
+                    DisplayCentered("", height / 2 - 3);
+                    DisplayCentered($"Player {i + 1} - Enter your name :");
+                    DisplayCentered("", height / 2);
+                    Console.Write(new string(border, width));
+
+                    Console.SetCursorPosition(width / 2 - 2, height / 2);
+                    nameOfPlayers[i] = Console.ReadLine();
+
+                    if (nameOfPlayers[i] != "")
+                    {
+                        break;
+                    }
+
+                    Console.SetCursorPosition(0, height / 2);
+                    DisplayCentered("Nom invalide !");
+                    Thread.Sleep(1000);
+                    Console.Clear();
+                }
+            }
+            return nameOfPlayers;
+        }
+
+
+        /// <summary>
+        /// Demande à l'utilisateur d'entrer un nombre valide dans une plage donnée.<br/>
+        /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
+        /// </summary>
+        /// <param name="prompt">Le message à afficher pour demander une entrée à l'utilisateur.</param>
+        /// <param name="min">La valeur minimale acceptable pour le nombre.</param>
+        /// <param name="max">La valeur maximale acceptable pour le nombre.</param>
+        /// <returns>Un entier valide saisi par l'utilisateur, compris entre <paramref name="min"/> et <paramref name="max"/>.</returns>
+        /// <remarks>
+        /// Si un joueur entre un nombre invalide, un message d'erreur est affiché et la saisie est demandée à nouveau.
+        /// </remarks>
+        private static int GetValideNumber(string prompt, int min, int max)
+        {
+            int number;
+
+            while (true)
+            {
+                Console.WriteLine(new string(border, width));
+                DisplayCentered("", height / 2 - 3);
+                DisplayCentered(prompt);
+                DisplayCentered("", height / 2);
+                Console.Write(new string(border, width));
+
+                Console.SetCursorPosition(width / 2, height / 2);
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out number))
+                {
+                    if (number <= max && number >= min)
+                    {
+                        return number;
+                    }
+
+                }
+                Console.SetCursorPosition(0, height / 2);
+                DisplayCentered("Entrée invalide !");
+                Thread.Sleep(1000);
+                Console.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Demande à l'utilisateur d'entrer une durée valide dans une plage donnée.<br/>
+        /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
+        /// </summary>
+        /// <param name="prompt">Le message à afficher pour demander une entrée à l'utilisateur.</param>
+        /// <param name="min">La durée minimale acceptable, au format "hh:mm:ss".</param>
+        /// <param name="max">La durée maximale acceptable, au format "hh:mm:ss".</param>
+        /// <returns>Un objet <see cref="TimeSpan"/>  valide saisi par l'utilisateur, compris entre <paramref name="min"/> et <paramref name="max"/>.</returns>
+        /// <remarks>
+        /// Si un joueur entre un temps invalide, un message d'erreur est affiché et la saisie est demandée à nouveau.
+        /// </remarks>
+        private static TimeSpan GetValideTime(string prompt, string min, string max)
+        {
+            TimeSpan time;
+
+            while (true)
+            {
+                Console.WriteLine(new string(border, width));
+                DisplayCentered("", height / 2 - 3);
+                DisplayCentered(prompt);
+                DisplayCentered("", height / 2);
+                Console.Write(new string(border, width));
+
+                Console.SetCursorPosition(width / 2, height / 2);
+                string input = "00:" + Console.ReadLine();
+
+                if (TimeSpan.TryParse(input, out time))
+                {
+                    if (time >= TimeSpan.Parse(min) && time <= TimeSpan.Parse(max))
+                    {
+                        return time;
+                    }
+
+                }
+                Console.SetCursorPosition(0, height / 2);
+                DisplayCentered("Entrée invalide !");
+                Thread.Sleep(1000);
+                Console.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Demande à l'utilisateur d'entrer une mot valide dans une liste donnée.<br/>
+        /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
+        /// </summary>
+        /// <param name="prompt">Le message à afficher pour demander une entrée à l'utilisateur.</param>
+        /// <param name="options">La liste des mots possibles.</param>
+        /// <returns>Un objet <see cref="TimeSpan"/>  valide saisi par l'utilisateur, compris entre <paramref name="min"/> et <paramref name="max"/>.</returns>
+        /// <remarks>
+        /// Si un joueur entre un mot invalide, un message d'erreur est affiché et la saisie est demandée à nouveau.
+        /// </remarks>
+        private static string GetValideWord(string prompt, string[] options)
+        {
+            string word;
+
+            while (true)
+            {
+                Console.WriteLine(new string(border, width));
+                DisplayCentered("", height / 2 - 3);
+                DisplayCentered(prompt);
+                DisplayCentered("", height / 2);
+                Console.Write(new string(border, width));
+
+                Console.SetCursorPosition(width / 2, height / 2);
+                word = Console.ReadLine();
+
+                if (options.Contains(word))
+                {
+                    return word;
+                }
+
+                Console.SetCursorPosition(0, height / 2);
+                DisplayCentered("Entrée invalide !");
+                Thread.Sleep(1000);
+                Console.Clear();
+            }
+        }
+
+
+        /// <summary>
+        /// Affiche un texte centré avec des bordures et la possibilité de le mettre en surbrillance.
+        /// </summary>
+        /// <param name="text">Le texte à afficher.</param>
+        /// <param name="n">Le nombre de fois que le texte doit être affiché.</param>
+        /// <param name="selected">Indique si le texte doit être affiché en surbrillance.</param>
         public static void DisplayCentered(string text = "", int n = 1, bool selected=false)
         {
             List<string> lines = new List<string>(text.Split("\n"));

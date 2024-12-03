@@ -16,8 +16,8 @@
         /// <summary>
         /// Crée un dictionnaire d'une langue (<paramref name="language"/>) à partir d'un fichier par son chemin d'accès (<paramref name="filePath"/>)
         /// </summary>
-        /// <param name="filePath">Chemin d'accès au fichier de mots</param>
-        /// <param name="language">Langue du dictionnaire</param>
+        /// <param name="filePath">Chemin d'accès au fichier de mots.</param>
+        /// <param name="language">Langue du dictionnaire.</param>
         /// En un parcours de la liste words, on parvient à remplir les deux dictionnaires.
         /// A la fin du parcours, on trie chaque liste présente dans les 2 dictionnaires afin de faciliter le travail des algorithmes de recherche.
         /// Si le fichier n'existe pas, on catch l'erreur et initialise `words` avec une liste vide.
@@ -115,7 +115,7 @@
         /// <summary>
         /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri à bulles.
         /// </summary>
-        /// <param name="list">Liste de mots à trier</param>
+        /// <param name="list">Liste de mots à trier.</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir une complexité de O(n) dans le meilleur des cas, et une complexité de O(n²) dans le pire des cas.
         /// Optimisation de la Complexité --> Dans un tri à bulles, après chaque passe, les derniers éléments sont déjà triés. Nous avons bien diminué la taille de la boucle avec n--, pour réduire la longueur des parcours.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable "temp" en dehors des boucles, pour réduire l'allocation de la mémoire à 1 case. 
@@ -148,9 +148,9 @@
         /// <summary>
         /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri rapide.
         /// </summary>
-        /// <param name="list">Liste de mots à trier</param>
-        /// <param name="start">Index de début</param>
-        /// <param name="end">INdex de fin</param>
+        /// <param name="list">Liste de mots à trier.</param>
+        /// <param name="start">Index de début.</param>
+        /// <param name="end">INdex de fin.</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
         public static void QuickSort(List<string> list, int start, int end)
@@ -193,7 +193,7 @@
         /// <summary>
         /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
         /// </summary>
-        /// <param name="word">Mot à vérifier</param>
+        /// <param name="word">Mot à vérifier.</param>
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
         /// Avant de récupérer la liste restreinte qui contient potentiellement le mot, on vérifie que la clé correspondant au mot existe dans le dictionnaire, afin de ne pas générer une erreur de type `KeyNotFoundException`.
@@ -217,7 +217,7 @@
         /// <summary>
         /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
         /// </summary>
-        /// <param name="word">Mot à vérifier</param>
+        /// <param name="word">Mot à vérifier.</param>
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
         /// On vérifie que les clés sont présents dans les dictionnaires  avant de les utiliser pour éviter une erreur de type `KeyNotFoundException`.
@@ -255,7 +255,7 @@
         /// <summary>
         /// Vérifie la présence d'un mot (<paramref name="word"/>) dans le dictionnaire à travers une recherche dichotomique (<see cref="RecursiveBinarySearch"/>) en déterminant une liste de mots restreinte et triée.
         /// </summary>
-        /// <param name="word">Mot à vérifier</param>
+        /// <param name="word">Mot à vérifier.</param>
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On considère que le mot en paramètre `word` n'est pas nul ou vide. Cette condition sera vérifié quand l'utilisateur entrera un mot dans la console.
         /// On vérifie que les clés sont présents dans les dictionnaires  avant de les utiliser pour éviter une erreur de type `KeyNotFoundException`.
@@ -285,10 +285,10 @@
         /// <summary>
         /// Réalise une recherche dichotomique pour trouver un mot (<paramref name="mot"/>) dans une liste de mot (<paramref name="list"/>).
         /// </summary>
-        /// <param name="mot">Mot à trouver</param>
-        /// <param name="list">Liste dans laquelle on cherche le mot</param>
-        /// <param name="min">Indice délimitant la borne inférieure</param>
-        /// <param name="max">Indice délimitant la borne supérieure</param>
+        /// <param name="mot">Mot à trouver.</param>
+        /// <param name="list">Liste dans laquelle on cherche le mot.</param>
+        /// <param name="min">Indice délimitant la borne inférieure.</param>
+        /// <param name="max">Indice délimitant la borne supérieure.</param>
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
         /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.

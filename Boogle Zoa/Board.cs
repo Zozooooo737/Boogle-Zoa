@@ -25,7 +25,7 @@
         /// <summary>
         /// Crée un plateau de jeu à partir d'une liste de dés (<paramref name="dices"/>).
         /// </summary>
-        /// <param name="d">Liste de dés (<see cref="Dice"/>)</param>
+        /// <param name="d">Liste de dés (<see cref="Dice"/>).</param>
         /// Update : Réalise une matrice à partir de n'importe quelle taille de `dices` (entre 4 et 32 par exemple)
         public Board(Dice[] dices)
         {
@@ -78,8 +78,8 @@
         /// <summary>
         /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="boardOfLetters"/>) et dans le dictionnaire (<paramref name="dico"/>).
         /// </summary>
-        /// <param name="word">Mot à vérifier</param>
-        /// <param name="dictionary">Dictionnaire utilisé</param>
+        /// <param name="word">Mot à vérifier.</param>
+        /// <param name="dictionary">Dictionnaire utilisé.</param>
         /// <returns>
         /// <c>true</c> si le mot est présent sur le plateau de jeu ; sinon, <c>false</c>.
         /// </returns>
@@ -132,13 +132,13 @@
         /// Recherche récursive des chemins possibles pour former un mot donné sur le plateau de lettres.
         /// La méthode explore les cases adjacentes pour correspondre aux lettres du mot, ajoutant chaque chemin valide à <paramref name="allPaths"/>.
         /// </summary>
-        /// <param name="word">Mot à rechercher</param>
+        /// <param name="word">Mot à rechercher.</param>
         /// <param name="board">Plateau de lettres où la recherche est effectuée.</param>
-        /// <param name="x">Coordonnée x de la case actuelle sur le plateau</param>
-        /// <param name="y">Coordonnée y de la case actuelle sur le plateau</param>
-        /// <param name="index">Index actuel dans le mot, représentant la lettre cible à rechercher sur cette case</param>
-        /// <param name="path">Liste des coordonnées (x, y) représentant le chemin actuel pour former le mot</param>
-        /// <param name="allPaths">Collection de tous les chemins trouvés, chaque chemin étant une liste de coordonnées formant le mot</param>
+        /// <param name="x">Coordonnée x de la case actuelle sur le plateau.</param>
+        /// <param name="y">Coordonnée y de la case actuelle sur le plateau.</param>
+        /// <param name="index">Index actuel dans le mot, représentant la lettre cible à rechercher sur cette case.</param>
+        /// <param name="path">Liste des coordonnées (x, y) représentant le chemin actuel pour former le mot.</param>
+        /// <param name="allPaths">Collection de tous les chemins trouvés, chaque chemin étant une liste de coordonnées formant le mot.</param>
         /// Version 2 : Nous avons fait une nouvelle fonction récursive pour gérer le cas où plusieurs chemins seraient possibles à partir d'une même lettre.
         /// Optimisation de la Fonction : Initialement nous faisions une disjonction de cas pour trouver les cases adjacentes, désormais nous réalisons toutes les adjacences possibles et en début de fonction, nous éliminons toutes les cases qui ne respectent pas les conditions.
         private void FindWordRecursive(string word, char[,] board, int x, int y, int index, List<(int, int)> path, List<List<(int, int)>> allPaths)

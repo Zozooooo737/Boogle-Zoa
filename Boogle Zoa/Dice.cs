@@ -26,8 +26,8 @@
         /// <summary>
         /// Crée un dé aléatoirement à partir d'un alphabet donné (<paramref name="lettersInformation"/>).
         /// </summary>
-        /// <param name="r">Une instance de la classe Random</param>
-        /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tableau de taille 2 représentant le poids et le nombre de cette lettre</param>
+        /// <param name="r">Une instance de la classe Random.</param>
+        /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tableau de taille 2 représentant le poids et le nombre de cette lettre.</param>
         /// En utilisant l'attribut de classe <see cref="usedLetters"/>, on prends en compte le nombre d'apparition des lettres afin de respecter le jeu du Boogle. 
         /// Optimisation de la Mémoire --> On a déclare "int c" à l'exterieur de la boucle "for" pour réalisquer qu'une seule allocation mémoire au lieu de 6.
         /// Gérer le cas où plus de lettre dispos, pour finir le jeu à 100%
@@ -52,7 +52,7 @@
         /// <summary>
         /// Crée un dé en fixant comme lettre visible, le caractère (<paramref name="lettersInformation"/>).
         /// </summary>
-        /// <param name="visibleLetter">Une lettre</param>
+        /// <param name="visibleLetter">Une lettre.</param>
         /// Ce constructeur permet de crée un dé en prédifinissant sa lettre visible afin de pouvoir crée des plateaux `Board` pertinent pour ses tests unitaires.
         public Dice(char letter)
         {
@@ -92,7 +92,7 @@
         /// <summary>
         /// Lance le dé pour déterminer quelle lettre du dé sera visible (<see cref="visibleLetter"/>), et actualise le dictionnaire d'apparition (<see cref="usedLetters"/>).
         /// </summary>
-        /// <param name="r">Une instance de la classe Random</param>
+        /// <param name="r">Une instance de la classe Random.</param>
         public void Roll(Random r)
         {
             int n = r.Next(6);                                                     

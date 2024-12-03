@@ -14,7 +14,7 @@
         /// <summary>
         /// Crée un joueur à partir d'un nom (<paramref name="name"/>).
         /// </summary>
-        /// <param name="n">Nom du Joueur</param>
+        /// <param name="n">Nom du Joueur.</param>
         public Player(string name)
         {
             this.name = name;
@@ -54,7 +54,7 @@
         /// <summary>
         /// Vérifie si un mot donné (<paramref name="word"/>) est présent dans la liste des mots trouvés par le joueur (<see cref="wordsFound"/>).
         /// </summary>
-        /// <param name="word">Mot à vérifier</param>
+        /// <param name="word">Mot à vérifier.</param>
         /// <returns>
         /// <c>true</c> si le mot est présent dans la liste des mots trouvés par le joueur ; sinon, <c>false</c>.
         /// </returns>
@@ -69,7 +69,7 @@
         /// Ajoute un mot (<paramref name="word"/>) à la liste des mots trouvés (<see cref="wordsFound"/>) et met à jour le score du joueur (<see cref="score"/>). <br/>Le score est calculé en additionnant
         /// le poids de chaque lettre du mot, selon les valeurs présentes dans le dictionnaire (<paramref name="lettersInformation"/>).
         /// </summary>
-        /// <param name="word">Le mot à ajouter à la liste des mots trouvés</param>
+        /// <param name="word">Le mot à ajouter à la liste des mots trouvés.</param>
         /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tableau de taille 2 représentant le poids et le nombre de cette lettre.</param>
         /// <remarks>
         /// Avant d'ajouter le mot (<paramref name="word"/>), on vérifie qu'il n'est pas déjà présent dans la liste (<see cref="wordsFound"/>).<br/>
