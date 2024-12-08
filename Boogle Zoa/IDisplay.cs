@@ -21,7 +21,6 @@
 
 
         int Menu(string[] options);
-        int DisplayMenu();
 
 
         int GetValideNumber(string prompt, int min, int max);

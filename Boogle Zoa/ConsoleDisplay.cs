@@ -33,6 +33,7 @@ namespace Boogle_Zoa
         /// Liste des thèmes disponibles. Chaque thème est défini par un couple de couleurs 
         /// (couleur de fond, couleur du texte) pour personnaliser l'affichage dans la console.
         /// </summary>
+        /// La liste des thèmes est accéssible en public pour qu'on puisse le récupérer dans le Main
         private static Dictionary<string, (ConsoleColor Background, ConsoleColor Foreground)> themes = new Dictionary<string, (ConsoleColor, ConsoleColor)>
         {
             { "EGYPT", (ConsoleColor.Yellow, ConsoleColor.DarkYellow) },
@@ -41,11 +42,11 @@ namespace Boogle_Zoa
             { "ARCANE", (ConsoleColor.Black, ConsoleColor.Magenta) }
         };
 
+
         /// <summary>
         /// Thème actuellement sélectionné, représenté par son nom.
         /// </summary>
         private static string theme = "EGYPT";
-
 
         /// <summary>
         /// Largeur de la console en caractères.
@@ -62,8 +63,16 @@ namespace Boogle_Zoa
         /// </summary>
         private static char border = '▓';
 
- 
 
+        public static Dictionary<string, (ConsoleColor Background, ConsoleColor Foreground)> Themes
+        {
+            get { return themes; }
+        }
+
+        public static string Theme
+        {
+            set { theme = value; }
+        }
 
 
 
@@ -278,8 +287,6 @@ namespace Boogle_Zoa
             Console.SetCursorPosition(0, height - 3);
             DisplayCentered(message);
             Console.SetCursorPosition(width / 2 - 3, height - 4);
-
-            Thread.Sleep(1000);
         }
 
 
@@ -358,28 +365,7 @@ namespace Boogle_Zoa
 
             return selected;
         }
-        /// <summary>
-        /// Affiche la fenêtre du menu principal avec plusieurs options et permet à l'utilisateur de faire un choix.
-        /// </summary>
-        /// <returns>
-        /// Un entier représentant l'option sélectionnée par l'utilisateur :
-        /// <list type="bullet">
-        /// <item><description>0 : Mode NORMAL</description></item>
-        /// <item><description>1 : Mode CUSTOM</description></item>
-        /// <item><description>2 : Quitter le programme</description></item>
-        /// </list>
-        /// </returns>
-        /// <remarks>
-        /// Cette méthode utilise la fonction <c>Menu</c> pour afficher et gérer les choix.
-        /// </remarks>
-        public int DisplayMenu()
-        {
-            string[] options = { "NORMAL", "CUSTOM", "QUIT" };
-
-            int selected = Menu(options);
-
-            return selected;
-        }
+        
 
 
 
