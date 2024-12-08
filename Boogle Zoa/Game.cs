@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Xml.Linq;
 
 
 namespace Boogle_Zoa
@@ -19,6 +21,8 @@ namespace Boogle_Zoa
 
         private Random random;
 
+        private IDisplay _display;
+
 
         // Optimisation : nous effectuons l'initialisation de lettersInformation qu'une seule fois
         static Game()
@@ -33,7 +37,7 @@ namespace Boogle_Zoa
         }
 
 
-        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRound, int sizeOfBoard, string language)
+        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRound, int sizeOfBoard, string language, IDisplay display)
         {
             this.numberOfPlayers = numberOfPlayers;
             this.timePerRound = timePerRound;
@@ -46,12 +50,14 @@ namespace Boogle_Zoa
             players = new Player[numberOfPlayers];
 
             random = new Random();
+
+            _display = display;
         }
 
 
 
         // Ecris message de validité
-        public void GetNameOfPlayers(string[] names)
+        public void SetNameOfPlayers(string[] names)
         {
             for(int i = 0; i < numberOfPlayers; i++)
             {
@@ -71,7 +77,6 @@ namespace Boogle_Zoa
 
             for (int r = 0; r < numberOfRound; r++)
             {
-                Program.DisplayCentered(($"ROUND {r + 1}\n"));
 
                 for (int p = 0; p < numberOfPlayers; p++)
                 {
@@ -83,34 +88,35 @@ namespace Boogle_Zoa
                     Dice[] dices = new Dice[sizeOfBoard * sizeOfBoard];
                     CreateDices(dices);
 
-                    Program.DisplayCentered(($"Your turn {players[p].Name} !\n"));
+                   
 
                     // Création de la Board
                     Board board = new Board(dices);
-                    Program.DisplayCentered((board.toString()));
-
-                    Console.WriteLine($"Which words can you see ?\n");
+                    _display.DisplayGame(r, players[p].Name, board);
 
                     while (DateTime.Now < endTime)
                     {
                         // Boucle Entrer mot / Verif le mot / ajoute le mot au joueur
-                        string word = Console.ReadLine();
-                        Console.Write(word);
+                        string word;
+
+                        while (true)
+                        {
+                            word = _display.GetWord();
+                            if(word != "")
+                            {
+                                break;
+                            }
+                        }
+
                         if (board.GameBoardTest(word, dictionaryWords))
                         {
                             players[p].AddWord(word, lettersInformation);
-                            Console.Write($" The word is valid! Your score is now at {players[p].Score} points!");
+                            _display.DisplayMessage($" The word is valid! Your score is now at {players[p].Score} points!");
                         }
                         else
                         {
-                            Console.Write(" The word is unvalid... Try again !");
+                            _display.DisplayMessage(" The word is unvalid... Try again !");
                         }
-
-                        Thread.Sleep(1000);
-
-                        Console.SetCursorPosition(0, Console.CursorTop);
-                        Console.Write(new string(' ', Console.BufferWidth));
-                        Console.SetCursorPosition(0, Console.CursorTop);
                     }
 
                     // Améliorer le fait que tant qu'il n'y a pas de mots entré alors le end time n'est pas atteint
@@ -119,21 +125,16 @@ namespace Boogle_Zoa
                 // Fin de round
             }
             int scoreWinner = players[0].Score;
-            string winner = players[0].Name;
+            Player winner = players[0];
             for (int p = 1; p < numberOfPlayers; p++)
             {
                 if (players[p].Score > scoreWinner)
                 {
                     scoreWinner = players[p].Score;
-                    winner = players[p].Name;
+                    winner = players[p];
                 }
             }
-            Console.WriteLine($"Congrats {winner}, you won with a score of {scoreWinner} points !");
-            Console.WriteLine(" ----");
-            Console.WriteLine("|    |");
-            Console.WriteLine("|  * |    <- téton de enzo sur Minecraft");
-            Console.WriteLine("|    |");
-            Console.WriteLine(" ----");
+            _display.DisplayWinner(winner);
         }
 
 

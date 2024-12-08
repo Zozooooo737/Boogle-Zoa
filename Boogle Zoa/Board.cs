@@ -74,6 +74,14 @@
             get { return boardOfLetters; }
         }
 
+        /// <summary>
+        /// Renvoie la hauteur du plateau de lettres (<see cref="side"/>).
+        /// </summary>
+        public int Side
+        {
+            get { return side;  }
+        }
+
 
         /// <summary>
         /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="boardOfLetters"/>) et dans le dictionnaire (<paramref name="dico"/>).
