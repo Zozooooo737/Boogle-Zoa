@@ -94,7 +94,6 @@
             get { return words; }
         }
 
-
         /// <summary>
         /// Renvoie le dictionnaire qui associe à chaque caractère, la liste des mots commencant par ce caractère (<see cref="wordsByLetter"/>).
         /// </summary>
@@ -110,6 +109,7 @@
         {
             get { return wordsBySize; }
         }
+
 
 
         /// <summary>
@@ -157,7 +157,6 @@
         {
             if (end - start < 1) return;
 
-            // On prend comme pivot l'élément à droite (dernier élément)
             string pivot = list[end];
             int wall = start;
             int current = start;
@@ -169,7 +168,6 @@
                 {
                     if (wall != current)
                     {
-                        // On échange les éléments à l'index current et wall
                         temp = list[current];
                         list[current] = list[wall];
                         list[wall] = temp;
@@ -179,12 +177,10 @@
                 current++;
             }
 
-            // On place le pivot à la bonne position en l'échangeant avec l'élément à l'index wall
             string tmpPivot = list[wall];
             list[wall] = list[end];
             list[end] = tmpPivot;
 
-            // On trie les sous-tableaux à gauche et à droite du pivot
             QuickSort(list, start, wall - 1);
             QuickSort(list, wall + 1, end);
         }

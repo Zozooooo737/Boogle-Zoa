@@ -140,6 +140,13 @@ namespace Boogle_Zoa
         }
 
 
+        static void Mai2(string[] args)
+        {
+            WordCloud wc = new WordCloud(new string[] { "BRIMSTONE", "VALORANT", "PHOENIX", "CHAMBER", "RAZE", "JETT", "VI", "UNE", "UN", "MA", "TA", "LA", "UN", "MA", "TA", "LA", "UN", "MA", "TA", "LA" });
+            wc.SaveAndOpenImage("noajune.png");
+        }
+
+
         /// <summary>
         /// Affiche la fenêtre du menu principal avec plusieurs options et permet à l'utilisateur de faire un choix.
         /// </summary>

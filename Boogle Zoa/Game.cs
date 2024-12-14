@@ -1,10 +1,4 @@
-﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Xml.Linq;
-
-
-namespace Boogle_Zoa
+﻿namespace Boogle_Zoa
 {
     public class Game
     {
@@ -24,7 +18,7 @@ namespace Boogle_Zoa
         private IDisplay _display;
 
 
-        // Optimisation : nous effectuons l'initialisation de lettersInformation qu'une seule fois
+
         static Game()
         {
             lettersInformation = new Dictionary<char, (int, int)> { };
@@ -56,7 +50,6 @@ namespace Boogle_Zoa
 
 
 
-        // Ecris message de validité
         public void SetNameOfPlayers(string[] names)
         {
             for(int i = 0; i < numberOfPlayers; i++)
@@ -68,7 +61,6 @@ namespace Boogle_Zoa
         }
 
 
-        // 3, 2, 1
         public void Process()
         {
             TimeSpan duration;
@@ -84,19 +76,11 @@ namespace Boogle_Zoa
                     startTime = DateTime.Now;
                     endTime = startTime + duration;
 
-                    // Size doit faire 4 sinon probleme sur Board
-                    Dice[] dices = new Dice[sizeOfBoard * sizeOfBoard];
-                    CreateDices(dices);
-
-                   
-
-                    // Création de la Board
-                    Board board = new Board(dices);
+                    Board board = CreateBoard();
                     _display.DisplayGame(r, players[p].Name, board);
 
                     while (DateTime.Now < endTime)
                     {
-                        // Boucle Entrer mot / Verif le mot / ajoute le mot au joueur
                         string word;
 
                         while (true)
@@ -118,14 +102,12 @@ namespace Boogle_Zoa
                             _display.DisplayMessage(" The word is unvalid... Try again !");
                         }
                     }
-
-                    // Améliorer le fait que tant qu'il n'y a pas de mots entré alors le end time n'est pas atteint
-
                 }
-                // Fin de round
             }
+
             int scoreWinner = players[0].Score;
             Player winner = players[0];
+
             for (int p = 1; p < numberOfPlayers; p++)
             {
                 if (players[p].Score > scoreWinner)
@@ -134,16 +116,32 @@ namespace Boogle_Zoa
                     winner = players[p];
                 }
             }
+
+            GenerateWordCloud(winner);
+
             _display.DisplayWinner(winner);
         }
 
 
-        private void CreateDices(Dice[] dices)
+        private Board CreateBoard()
         {
-            for(int i=0; i<dices.Length; i++)
+            Dice[] dices = new Dice[sizeOfBoard * sizeOfBoard];
+
+            for (int i = 0; i < dices.Length; i++)
             {
                 dices[i] = new Dice(random, lettersInformation);
             }
+
+            Board board = new Board(dices);
+
+            return board;
+        }
+
+
+        private void GenerateWordCloud(Player player)
+        {
+            WordCloud wordCloud = new WordCloud(player.WordsFound.ToArray());
+            wordCloud.SaveAndOpenImage(player.Name + ".png");
         }
     }
 }

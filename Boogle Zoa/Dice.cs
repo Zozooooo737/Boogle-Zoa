@@ -56,7 +56,7 @@
         /// Ce constructeur permet de crée un dé en prédifinissant sa lettre visible afin de pouvoir crée des plateaux `Board` pertinent pour ses tests unitaires.
         public Dice(char letter)
         {
-            letters = new char[6];
+            letters = new char[6] { 'A', 'B', 'C', 'D', 'E', letter };
             visibleLetter = letter;
         }
 
@@ -70,7 +70,6 @@
             get { return letters; } 
         }
 
-
         /// <summary>
         /// Renvoie la lettre visible (<see cref="visibleLetter"/>) du dé.
         /// </summary>
@@ -79,7 +78,6 @@
             get { return visibleLetter; }
         }
 
-
         /// <summary>
         /// Renvoie le dictionnaire des apparitions de chaques lettres visibles (<see cref="usedLetters"/>).
         /// </summary>
@@ -87,6 +85,7 @@
         {
             get { return usedLetters; }
         }
+
 
 
         /// <summary>

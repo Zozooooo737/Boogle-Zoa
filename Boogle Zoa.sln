@@ -5,7 +5,12 @@ VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boogle Zoa", "Boogle Zoa\Boogle Zoa.csproj", "{F48CC9BF-AC93-4131-91C8-DE396D8D5F84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Boogle Zoa Tests", "Boogle Zoa Tests\Boogle Zoa Tests.csproj", "{C0AB562A-03CE-490C-A1D5-6F1F132636B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Boogle Zoa Tests", "Boogle Zoa Tests\Boogle Zoa Tests.csproj", "{C0AB562A-03CE-490C-A1D5-6F1F132636B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{103C5C01-F868-4CBC-9C17-8CD0F813FCD1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

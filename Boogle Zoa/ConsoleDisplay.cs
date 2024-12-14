@@ -42,11 +42,11 @@ namespace Boogle_Zoa
             { "ARCANE", (ConsoleColor.Black, ConsoleColor.Magenta) }
         };
 
-
         /// <summary>
         /// Thème actuellement sélectionné, représenté par son nom.
         /// </summary>
         private static string theme = "EGYPT";
+        
 
         /// <summary>
         /// Largeur de la console en caractères.
@@ -64,6 +64,7 @@ namespace Boogle_Zoa
         private static char border = '▓';
 
 
+
         public static Dictionary<string, (ConsoleColor Background, ConsoleColor Foreground)> Themes
         {
             get { return themes; }
@@ -76,13 +77,12 @@ namespace Boogle_Zoa
 
 
 
-
         /// <summary>
         /// Configure la console en ajustant ses dimensions, son apparence et en empêchant le redimensionnement de la fenêtre.
         /// </summary>
+        /// Ce code récupère le menu système de la console et supprime l'option "Redimensionner" pour empêcher le redimensionnement de la fenêtre.
         public void SetupDisplay()
         {
-            // Ce code récupère le menu système de la console et supprime l'option "Redimensionner" pour empêcher le redimensionnement de la fenêtre.
             nint systemMenu = GetSystemMenu(GetConsoleWindow(), false);
             int sizeCommand = 0xF000;
             DeleteMenu(systemMenu, sizeCommand, 0x00000000);
@@ -174,21 +174,23 @@ namespace Boogle_Zoa
             Console.Clear();
         }
 
+
         public void DisplayWinner(Player winner)
         {
             Console.Clear();
             Console.WriteLine(new string(border, width));
-            DisplayCentered("", height / 2 - 2);
+            DisplayCentered("", height / 2 - 3);
 
-            DisplayCentered($"Congrats {winner.Name}, you won with a score of {winner.Score} points !");
+            DisplayCentered($"Congrats {winner.Name}, you won with a score of {winner.Score} points !\n");
 
-            DisplayCentered("", height/2 - 1);
+            DisplayCentered($"Let'see your word cloud ! It is available in the “WordClouds” folder.");
+
+            DisplayCentered("", height/2 - 2);
             Console.Write(new string(border, width));
             Console.ReadKey(false);
             Console.Clear();
-
-            // nuage de mots
         }
+
 
         /// <summary>
         /// Affiche la fenêtre du message d'au revoir à l'utilisateur.
@@ -249,6 +251,7 @@ namespace Boogle_Zoa
             return nameOfPlayers;
         }
 
+
         public void DisplayGame(int round, string name, Board board)
         {
             Console.Clear();
@@ -282,13 +285,13 @@ namespace Boogle_Zoa
             return word;
         }
 
+
         public void DisplayMessage(string message)
         { 
             Console.SetCursorPosition(0, height - 3);
             DisplayCentered(message);
             Console.SetCursorPosition(width / 2 - 3, height - 4);
         }
-
 
 
 
@@ -368,7 +371,6 @@ namespace Boogle_Zoa
         
 
 
-
         /// <summary>
         /// Demande à l'utilisateur d'entrer un nombre valide dans une plage donnée.<br/>
         /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
@@ -409,6 +411,9 @@ namespace Boogle_Zoa
                 Console.Clear();
             }
         }
+
+
+
         /// <summary>
         /// Demande à l'utilisateur d'entrer une durée valide dans une plage donnée.<br/>
         /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
@@ -449,6 +454,9 @@ namespace Boogle_Zoa
                 Console.Clear();
             }
         }
+
+
+
         /// <summary>
         /// Demande à l'utilisateur d'entrer une mot valide dans une liste donnée.<br/>
         /// La mise en page de la fenêtre est comprise pour améliorer l'expérience utilisateur.
@@ -497,6 +505,7 @@ namespace Boogle_Zoa
             sound.Play();
         }
 
+
         /// <summary>
         /// Joue un son de transition
         /// </summary>
@@ -505,6 +514,7 @@ namespace Boogle_Zoa
             SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/SoundEffect_Button1.wav");
             sound.Play();
         }
+
 
         /// <summary>
         /// Joue un son de bouton cliqué

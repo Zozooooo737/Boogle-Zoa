@@ -32,7 +32,6 @@
             get { return name; }
         }
 
-
         /// <summary>
         /// Renvoie le score (<see cref="score"/>) du joueur.
         /// </summary>
@@ -41,7 +40,6 @@
             get { return score; }
         }
 
-
         /// <summary>
         /// Renvoie la liste des mots trouvés (<see cref="wordsFound"/>) du joueur.
         /// </summary>
@@ -49,6 +47,7 @@
         {
             get { return wordsFound; }
         }
+
 
 
         /// <summary>
