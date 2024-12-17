@@ -1,112 +1,168 @@
-﻿using System.Diagnostics;
+﻿using Boogle_Zoa;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-namespace Boogle_Zoa
+public class WordCloud
 {
-    public class WordCloud
+    private static readonly int imageWidth = 960;
+    private static readonly int imageHeight = 600;
+    private static readonly int centerX = imageWidth / 2;
+    private static readonly int centerY = imageHeight / 2;
+
+    private static readonly Font TitleFont = new Font(FontFamily.GenericSerif, 50f);
+    private static readonly Brush TitleBrush = new SolidBrush(Color.Chocolate);
+    private static readonly Font TextFont = new Font(FontFamily.GenericSerif, 30f);
+    private static readonly Brush TextBrush = new SolidBrush(Color.Beige);
+
+    private string name;
+    private string[] words;
+    private int score;
+
+    private Bitmap bitmap;
+    private Graphics graphics;
+
+
+
+    public WordCloud(Player player)
     {
-        // Dimensions de l'image
-        private static readonly int imageWidth = 960;
-        private static readonly int imageHeight = 600;
+        name = player.Name;
+        score = player.Score;
+        words = player.WordsFound.ToArray();
 
-        private static int xGraphOrigin = -130;
-        private static int yGraphOrigin = 50;
+        Array.Sort(words, CompareBySize);
 
-        // Couleurs et styles
-        private static Font titleFont = new Font(FontFamily.GenericSerif, 34f, FontStyle.Bold);
-        private static readonly Brush titlebrush = new SolidBrush(Color.SaddleBrown);
-        private static readonly Brush backgroundBrush = new SolidBrush(Color.LightYellow);
-        private static readonly Brush wordBrush = new SolidBrush(Color.OrangeRed);
+        bitmap = new Bitmap(imageWidth, imageHeight);
+        graphics = Graphics.FromImage(bitmap);
 
+        graphics.Clear(Color.Black);
 
-        private static readonly Color CurveColor = Color.Red;
+        DrawTemplate();
+        DrawSpiralWords();
+    }
 
+    private void DrawSpiralWords()
+    {
+        int numWords = words.Length;
+        double angle = 0;
+        double radius = 10;
+        Font font;
+        Brush colorBrush;
+        int maxFontSize = 40;
+        int minFontSize = 10;
 
-        // Bitmap et contexte graphique
-        private Bitmap bitmap;
-        private Graphics graphics;
+        Color startColor = Color.Chocolate;
+        Color endColor = Color.Beige;
+        LinearGradientBrush gradientBrush = new LinearGradientBrush(new Point(0, 0), new Point(imageWidth, imageHeight), startColor, endColor);
 
-        private string[] words;
+        List<RectangleF> wordPositions = new List<RectangleF>();
 
-        
-
-        public WordCloud(string[] words)
+        for (int i = 0; i < numWords; i++)
         {
-            bitmap = new Bitmap(imageWidth, imageHeight);
-            graphics = Graphics.FromImage(bitmap);
-            this.words = words;
+            int fontSize = (int)(minFontSize + (i * (maxFontSize - minFontSize) / (double)numWords));
+            font = new Font(FontFamily.GenericSerif, fontSize, FontStyle.Bold);
+            colorBrush = new SolidBrush(gradientBrush.GetColorAtPosition((float)i / numWords));
 
-            graphics.FillRectangle(backgroundBrush, new Rectangle(0, 0, imageWidth, imageHeight));
+            bool placed = false;
+            int attempts = 0;
+            const int maxAttempts = 1000;
 
-            graphics.DrawString("BOOGLE ZOA", titleFont, titlebrush, 340, 20);
+            // Réinitialiser les positions initiales pour chaque mot
+            double currentAngle = angle;
+            double currentRadius = radius;
 
-            DrawParametricCurve(1, 4.15 * Math.PI, LogarithmicSpiral);
-        }
-
-        private void DrawParametricCurve(double tMin, double tMax, Func<double, (double x, double y)> parametricFunction)
-        {
-            int steps = words.Length; // Nombre de points à tracer
-            Font font;
-
-            for (int i = 0; i < steps; i++)
+            while (!placed && attempts < maxAttempts)
             {
-                font = new Font(FontFamily.GenericSerif, 5 + 1.2f * i, FontStyle.Bold); // A VOIR
+                int x = (int)(centerX + currentRadius * Math.Cos(currentAngle)) - fontSize / 2;
+                int y = (int)(centerY + currentRadius * Math.Sin(currentAngle)) - fontSize / 2;
 
-                double t = Map(i, 0, steps, tMin, tMax);
-                var (x, y) = parametricFunction(t);
+                RectangleF wordRectangle = new RectangleF(x, y, font.Size * words[i].Length, fontSize);
 
-                // Convertit les coordonnées (x, y) en pixels
-                int px = xGraphOrigin + (int)Map(x, -1.5, 1.5, 0, imageWidth);
-                int py = yGraphOrigin + (int)Map(y, -1.0, 1.0, 0, imageHeight);
-
-                if (px >= 0 && px < imageWidth && py >= 0 && py < imageHeight)
+                bool overlaps = false;
+                foreach (var existingWord in wordPositions)
                 {
-                    //Bitmap.SetPixel(px, py, CurveColor);
-                    graphics.DrawString(words[steps - i - 1].ToString(), font, wordBrush, px, py);
+                    if (existingWord.IntersectsWith(wordRectangle))
+                    {
+                        overlaps = true;
+                        break;
+                    }
                 }
-            }
-        }
 
-
-        public void SaveAndOpenImage(string fileName)
-        {
-            string filePath = $"..\\..\\..\\wordClouds\\{fileName}";
-            bitmap.Save(filePath, ImageFormat.Png);
-
-            try
-            {
-                ProcessStartInfo psi = new ProcessStartInfo
+                if (!overlaps)
                 {
-                    FileName = filePath,
-                    UseShellExecute = true
-                };
-                Process.Start(psi);
+                    DrawCenteredText(words[i], font, colorBrush, x, y);
+                    wordPositions.Add(wordRectangle);
+                    placed = true;
+                }
+                else
+                {
+                    // Si chevauchement, ajuster l'angle et le rayon
+                    currentAngle += Math.PI / 36;  // Petite augmentation de l'angle
+                    currentRadius += 2;  // Augmentation du rayon pour éloigner le mot
+                }
+
+                attempts++;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Erreur lors de l'ouverture du fichier : {ex.Message}");
-            }
-        }
 
-        private static (double x, double y) LogarithmicSpiral(double theta)
-        {
-            double a = 0.12; // Échelle initiale
-            double b = 0.17; // Facteur de croissance
-
-            // Calcul de r (distance à l'origine)
-            double r = a * Math.Exp(b * theta);
-
-            // Conversion en coordonnées cartésiennes
-            double x = r * Math.Cos(theta);
-            double y = r * Math.Sin(theta);
-
-            return (x, y);
-        }
-
-        private static double Map(double value, double fromMin, double fromMax, double toMin, double toMax)
-        {
-            return toMin + ((value - fromMin) * (toMax - toMin)) / (fromMax - fromMin);
+            angle += Math.PI / 20;  // Augmenter l'angle global pour la spirale
+            radius += 5;  // Augmenter progressivement le rayon général
         }
     }
+
+
+    private void DrawTemplate()
+    {
+        DrawCenteredText("BOOGLE ZOA", TitleFont, TitleBrush, imageWidth / 2, 50);
+
+        graphics.DrawString(name.ToUpper(), TextFont, TextBrush, 50, imageHeight - 75);
+
+        DrawCenteredText(score.ToString(), TextFont, TextBrush, 850, imageHeight - 50);
+    }
+
+
+    private void DrawCenteredText(string text, Font font, Brush brush, int xSet, int ySet)
+    {
+        float width = graphics.MeasureString(text, font).Width;
+        float heigth = font.GetHeight();
+
+        float x = (xSet - width / 2);
+        float y = ySet - heigth / 2;
+
+        graphics.DrawString(text, font, brush, x, y);
+    }
+
+
+    public void SaveAndOpenImage()
+    {
+        string filePath = $"..\\..\\..\\wordCloud\\WordCloud_{name}.png";
+
+        bitmap.Save(filePath, ImageFormat.Png);
+        System.Diagnostics.Process.Start("explorer", filePath);
+    }
+
+
+
+    public static int CompareBySize(string x, string y)
+    {
+        return x.Length.CompareTo(y.Length);
+    }
 }
+
+
+
+public static class GradientExtensions
+{
+    public static Color GetColorAtPosition(this LinearGradientBrush brush, float position)
+    {
+        Color startColor = brush.LinearColors[0];
+        Color endColor = brush.LinearColors[1];
+
+        int r = (int)(startColor.R + (endColor.R - startColor.R) * position);
+        int g = (int)(startColor.G + (endColor.G - startColor.G) * position);
+        int b = (int)(startColor.B + (endColor.B - startColor.B) * position);
+        int a = (int)(startColor.A + (endColor.A - startColor.A) * position);
+
+        return Color.FromArgb(a, r, g, b);
+    }
+}
+

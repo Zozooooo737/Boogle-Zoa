@@ -62,7 +62,7 @@
 
                 for (int p = 0; p < numberOfPlayers; p++)
                 {
-                    duration =timePerRound;
+                    duration = timePerRound;
                     startTime = DateTime.Now;
                     endTime = startTime + duration;
 
@@ -76,7 +76,7 @@
                         while (true)
                         {
                             word = display.GetWord();
-                            if(word != "")
+                            if (word != "")
                             {
                                 break;
                             }
@@ -95,19 +95,19 @@
                 }
             }
 
-            int scoreWinner = players[0].Score;
+            int scoreWinner = 0;
             Player winner = players[0];
 
-            for (int p = 1; p < numberOfPlayers; p++)
+            foreach(Player player in players)
             {
-                if (players[p].Score > scoreWinner)
+                GenerateWordCloud(player);
+
+                if (player.Score > scoreWinner)
                 {
-                    scoreWinner = players[p].Score;
-                    winner = players[p];
+                    scoreWinner = player.Score;
+                    winner = player;
                 }
             }
-
-            GenerateWordCloud(winner);
 
             display.DisplayWinner(winner);
         }
@@ -154,8 +154,8 @@
 
         private void GenerateWordCloud(Player player)
         {
-            WordCloud wordCloud = new WordCloud(player.WordsFound.ToArray());
-            wordCloud.SaveAndOpenImage("WordCloud_" + player.Name + ".png");
+            WordCloud wordCloud = new WordCloud(player);
+            wordCloud.SaveAndOpenImage();
         }
 
 
