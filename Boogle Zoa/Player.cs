@@ -76,20 +76,28 @@
 
 
         /// <summary>
-        /// Ajoute un mot (<paramref name="word"/>) à la liste des mots trouvés (<see cref="wordsFound"/>) et met à jour le score du joueur (<see cref="score"/>). <br/>Le score est calculé en additionnant
-        /// le poids de chaque lettre du mot, selon les valeurs présentes dans le dictionnaire (<paramref name="lettersInformation"/>).
+        /// Ajoute un mot (<paramref name="word"/>) à la liste des mots trouvés (<see cref="wordsFound"/>) et met à jour le score du joueur (<see cref="score"/>). <br/>
+        /// Le score est calculé en additionnant le poids de chaque lettre du mot, selon les valeurs présentes dans le dictionnaire (<paramref name="lettersInformation"/>).
         /// </summary>
         /// <param name="word">Le mot à ajouter à la liste des mots trouvés.</param>
-        /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tableau de taille 2 représentant le poids et le nombre de cette lettre.</param>
+        /// <param name="lettersInformation">Un dictionnaire où chaque clé est une lettre et chaque valeur est un tuple représentant le poids et le nombre de cette lettre.</param>
+        /// <returns>
+        /// <c>true</c> si le mot a été ajouté avec succès à la liste des mots trouvés ; sinon, <c>false</c> (si le mot était déjà présent).
+        /// </returns>
         /// <remarks>
         /// Avant d'ajouter le mot (<paramref name="word"/>), on vérifie qu'il n'est pas déjà présent dans la liste (<see cref="wordsFound"/>).<br/>
-        /// Il est supposé que (<paramref name="word"/>) existe dans le dictionnaire de la langue concernée
+        /// Il est supposé que le mot existe dans le dictionnaire de la langue concernée.
         /// </remarks>
-        public void AddWord(string word, Dictionary<char, (int, int)> lettersInformation)
+        public bool AddWord(string word, Dictionary<char, (int, int)> lettersInformation)
         {
+            bool succeeded = false;
+
             word = word.ToUpper();
+
             if (!Contain(word))
             {
+                succeeded = true;
+
                 wordsFound.Add(word);
                    
                 foreach(char c in word)
@@ -97,6 +105,7 @@
                     score += lettersInformation[c].Item1;
                 }
             }
+            return succeeded;
         }
 
 

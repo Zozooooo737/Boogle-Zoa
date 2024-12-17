@@ -40,13 +40,12 @@
         public DictionaryWords(string language)
         {
             this.language = language;
+            words = ReadDictionnary(language);
 
-            ReadDictionnary(language);
+            QuickSort(words, 0, words.Count - 1);
 
             int n;
             char c;
-
-            QuickSort(words, 0, words.Count - 1);
             
             foreach (string word in words) 
             {
@@ -99,39 +98,6 @@
             get { return wordsBySize; }
         }
 
-
-
-        /// <summary>
-        /// Lit un fichier dictionnaire contenant une liste de mots, en fonction de la langue spécifiée.
-        /// </summary>
-        private void ReadDictionnary(string language)
-        {
-            string filePath;
-
-            if (language == "FR")
-            {
-                filePath = "../../../data/MotsPossiblesFR.txt";
-            }
-            else if (language == "EN")
-            {
-                filePath = "../../../data/MotsPossiblesEN.txt";
-            }
-            else
-            {
-                filePath = "../../../../Boogle Zoa/data/data test/TestWords.txt";
-            }
-
-            try
-            {
-                string content = File.ReadAllText(filePath);
-                words = new List<string>(content.Split(' '));
-            }
-            catch (FileNotFoundException f)
-            {
-                words = [];
-                Console.WriteLine("Le fichier n'existe pas " + f.Message);
-            }
-        }
 
 
         /// <summary>
@@ -340,6 +306,45 @@
             {
                 return RecursiveBinarySearch(word, list, mid + 1, max);
             }
+        }
+
+
+        /// <summary>
+        /// Lit un fichier dictionnaire contenant une liste de mots en fonction de la langue spécifiée (<paramref name="language"/>). <br/>
+        /// Si la langue n'est ni "FR" ni "EN", un fichier de test est utilisé par défaut.
+        /// </summary>
+        /// <returns>
+        /// Une liste de mots extraits du fichier dictionnaire.
+        /// </returns>
+        private static List<string> ReadDictionnary(string language)
+        {
+            List<string> listOfWords;
+            string filePath;
+
+            if (language == "FR")
+            {
+                filePath = "../../../data/MotsPossiblesFR.txt";
+            }
+            else if (language == "EN")
+            {
+                filePath = "../../../data/MotsPossiblesEN.txt";
+            }
+            else
+            {
+                filePath = "../../../../Boogle Zoa/data/data test/TestWords.txt";
+            }
+
+            try
+            {
+                string content = File.ReadAllText(filePath);
+                listOfWords = new List<string>(content.Split(' '));
+            }
+            catch (FileNotFoundException f)
+            {
+                listOfWords = new List<string> { };
+                Console.WriteLine("Le fichier n'existe pas " + f.Message);
+            }
+            return listOfWords;
         }
     }
 }

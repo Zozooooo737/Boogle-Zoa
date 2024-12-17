@@ -7,12 +7,39 @@
     /// </summary>
     public class Board
     {
+        /// <summary>
+        /// Tableau de dés utilisés pour générer les lettres du plateau.
+        /// </summary>
         private Dice[] dices;
-        private char[] visibleLetters;
-        private char[,] boardOfLetters;
-        private int size;
-        private int side; 
 
+        /// <summary>
+        /// Tableau des lettres visibles générées par les dés.
+        /// Ces lettres forment le contenu du plateau de jeu.
+        /// </summary>
+        private char[] visibleLetters;
+
+        /// <summary>
+        /// Grille 2D représentant le plateau de jeu avec les lettres visibles.
+        /// Chaque case de la grille contient une lettre.
+        /// </summary>
+        private char[,] boardOfLetters;
+
+        /// <summary>
+        /// Nombre total de cases sur le plateau.
+        /// Cette valeur correspond à la taille totale du plateau de jeu<see cref="boardOfLetters"/>. 
+        /// </summary>
+        private int size;
+
+        /// <summary>
+        /// Longueur d'un côté de la grille du plateau de jeu.
+        /// La grille est de forme carrée, et cette valeur est obtenue en prenant la racine carrée de <see cref="size"/>.
+        /// </summary>
+        private int side;
+
+        /// <summary>
+        /// Tableau statique représentant les 8 directions possibles pour naviguer dans la grille.
+        /// Chaque direction est définie par un déplacement en x et en y, permettant d'explorer les cases adjacentes.
+        /// </summary>
         private static readonly (int, int)[] Directions = new (int, int)[]
         {
             (-1, -1), (-1, 0), (-1, 1),
@@ -83,18 +110,23 @@
         }
 
 
+
         /// <summary>
-        /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="boardOfLetters"/>) et dans le dictionnaire (<paramref name="dico"/>).
+        /// Vérifie si un mot donné (<paramref name="word"/>) est présent sur le plateau de jeu (<see cref="FindAllWordPaths"/>) et dans le dictionnaire (<paramref name="dictionary"/>).
         /// </summary>
         /// <param name="word">Mot à vérifier.</param>
-        /// <param name="dictionary">Dictionnaire utilisé.</param>
+        /// <param name="dictionary">Dictionnaire utilisé pour la vérification.</param>
         /// <returns>
-        /// <c>true</c> si le mot est présent sur le plateau de jeu ; sinon, <c>false</c>.
+        /// Un entier indiquant le résultat de la vérification :
+        /// <list type="bullet">
+        ///   <item><description><c>0</c> : Le mot est présent à la fois dans le dictionnaire et sur le plateau de jeu.</description></item>
+        ///   <item><description><c>1</c> : Le mot est présent dans le dictionnaire mais pas sur le plateau de jeu.</description></item>
+        ///   <item><description><c>2</c> : Le mot n'est ni dans le dictionnaire ni sur le plateau de jeu.</description></item>
+        /// </list>
         /// </returns>
-        /// Update : Renvoie la liste `allPaths` au lieu d'un bool / ou utiliser directement `FindAllWordPath`.
-        public bool GameBoardTest(string word, DictionaryWords dictionary)
+        public int GameBoardTest(string word, DictionaryWords dictionary)
         {
-            bool wordFound = false;
+            int wordFound = 2;
 
             if (dictionary.CheckWord3(word))
             {
@@ -103,10 +135,13 @@
 
                 if (allPaths.Count > 0)
                 {
-                    wordFound = true;
+                    wordFound = 0;
+                }
+                else
+                {
+                    wordFound = 1;
                 }
             }
-            
             return wordFound;
         }
 

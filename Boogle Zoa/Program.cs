@@ -57,7 +57,7 @@
 
                 if (type == 0)
                 {
-                    LaunchGame();
+                    LaunchGame(true);
                 }
                 else if (type == 1)
                 {
@@ -80,15 +80,25 @@
 
             } while (type != 3);
 
-            display.DisplayGoodbye();       
+            display.DisplayGoodbye();
         }
 
 
         /// <summary>
-        /// Initialise et lance une nouvelle partie du jeu avec les paramètres configurés.
+        /// Initialise et lance une nouvelle partie du jeu avec les paramètres configurés. <br/>
+        /// Si <paramref name="normal"/> est défini sur <c>true</c>, une partie par défaut est lancée avec les paramètres prédéfinis.
         /// </summary>
-        private static void LaunchGame()
+        private static void LaunchGame(bool normal = false)
         {
+            if (normal)
+            {
+                numberOfPlayer = 2;
+                timePerRound = TimeSpan.FromSeconds(30);
+                numberOfRound = 3;
+                sizeOfBoard = 4;
+                language = "FR";
+            }
+
             Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language, display);
 
             g.SetNameOfPlayers(display.InitializePlayerName(numberOfPlayer));

@@ -5,29 +5,30 @@
         private int numberOfPlayers;
         private TimeSpan timePerRound;
         private int numberOfRounds;
-        private int sizeOfBoard;
+        private int sideOfBoard;
         private string language;
         private DictionaryWords dictionaryWords;
 
         private Player[] players;
 
-        private static Dictionary<char, (int, int)> lettersInformation;
+        private Dictionary<char, (int, int)> lettersInformation;
 
         private Random random;
 
         private IDisplay display;
 
 
-        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRounds, int sizeOfBoard, string language, IDisplay display)
+
+        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRounds, int sideOfBoard, string language, IDisplay display)
         {
             this.numberOfPlayers = numberOfPlayers;
             this.timePerRound = timePerRound;
             this.numberOfRounds = numberOfRounds;
-            this.sizeOfBoard = sizeOfBoard;
+            this.sideOfBoard = sideOfBoard;
             this.language = language;
 
             dictionaryWords = new DictionaryWords(language);
-            ReadLettersInformation(language);
+            lettersInformation = ReadLettersInformation(language);
 
             AdjustLetterStocks();
             Dice.ResetUsedLetters();
@@ -67,6 +68,7 @@
                     endTime = startTime + duration;
 
                     Board board = CreateBoard();
+
                     display.DisplayGame(r, players[p].Name, board);
 
                     while (DateTime.Now < endTime)
@@ -82,14 +84,28 @@
                             }
                         }
 
-                        if (board.GameBoardTest(word, dictionaryWords))
+                        int isFound = board.GameBoardTest(word, dictionaryWords);
+
+                        if (isFound == 0)
                         {
-                            players[p].AddWord(word, lettersInformation);
-                            display.DisplayMessage($" The word is valid! Your score is now at {players[p].Score} points!");
+                            bool isAdded = players[p].AddWord(word, lettersInformation);
+                            
+                            if (isAdded)
+                            {
+                                display.DisplayMessage($"The word is valid! Your score is now at {players[p].Score} points!");
+                            }
+                            else if (!isAdded)
+                            {
+                                display.DisplayMessage($"The word is valid! But you have already found the word... Try again !");
+                            }
                         }
-                        else
+                        else if (isFound == 1)
                         {
-                            display.DisplayMessage(" The word is unvalid... Try again !");
+                            display.DisplayMessage("The word is not present on the board... Try again !");
+                        }
+                        else if (isFound == 2)
+                        {
+                            display.DisplayMessage("The word is not present in the dictionary... Try again !");
                         }
                     }
                 }
@@ -113,10 +129,26 @@
         }
 
 
-        public void AdjustLetterStocks()
+        public Board CreateBoard()
+        {
+            Dice[] dices = new Dice[sideOfBoard * sideOfBoard];
+
+            for (int i = 0; i < dices.Length; i++)
+            {
+                dices[i] = new Dice(random, lettersInformation);
+                dices[i].Roll(random);
+            }
+
+            Board board = new Board(dices);
+
+            return board;
+        }
+
+
+        private void AdjustLetterStocks()
         {
             // Calcule le stock total nécessaire
-            int totalStock = sizeOfBoard * sizeOfBoard * numberOfPlayers * numberOfRounds;
+            int totalStock = sideOfBoard * sideOfBoard * numberOfPlayers * numberOfRounds;
 
             // Calcule le stock actuel
             int currentStock = 0;
@@ -131,24 +163,9 @@
             // Ajuste les stocks proportionnellement
             foreach (char letter in lettersInformation.Keys)
             {
-                (int, int) info = (lettersInformation[letter].Item1, (int)Math.Round(lettersInformation[letter].Item2 * adjustmentFactor)+1);
+                (int, int) info = (lettersInformation[letter].Item1, (int)Math.Round(lettersInformation[letter].Item2 * adjustmentFactor) + 1);
                 lettersInformation[letter] = info;
             }
-        }
-
-
-        private Board CreateBoard()
-        {
-            Dice[] dices = new Dice[sizeOfBoard * sizeOfBoard];
-
-            for (int i = 0; i < dices.Length; i++)
-            {
-                dices[i] = new Dice(random, lettersInformation);
-            }
-
-            Board board = new Board(dices);
-
-            return board;
         }
 
 
@@ -159,9 +176,10 @@
         }
 
 
-        private void ReadLettersInformation(string language)
+
+        private static Dictionary<char, (int, int)> ReadLettersInformation(string language)
         {
-            lettersInformation = new Dictionary<char, (int, int)> { };
+            Dictionary<char, (int, int)>  dico = new Dictionary<char, (int, int)> { };
             string filepath;
 
             if (language == "FR")
@@ -184,7 +202,7 @@
                 while ((line = sReader.ReadLine()) != null) // Lire chaque ligne jusqu'à la fin du fichier
                 {
                     string[] information = line.Split(';');
-                    lettersInformation.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));
+                    dico.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));
                 }
             }
             catch (IOException e)
@@ -199,6 +217,7 @@
             {
                 if (sReader != null) { sReader.Close(); }
             }
+            return dico;
         }
     }
 }

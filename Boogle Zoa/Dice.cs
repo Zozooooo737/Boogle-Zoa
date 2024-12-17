@@ -52,7 +52,6 @@
                 }
                 while (usedLetters[letters[i]] >= lettersInformation[letters[i]].Item2);
             }
-            Roll(r);
         }
 
 
