@@ -5,8 +5,19 @@
     /// </summary>
     public class Player
     {
+        /// <summary>
+        /// Nom du joueur.
+        /// </summary>
         private string name;
+
+        /// <summary>
+        /// Score du joueur.
+        /// </summary>
         private int score;
+
+        /// <summary>
+        /// Liste des mots trouvés par le joueur.
+        /// </summary>
         private List<string> wordsFound;
 
 

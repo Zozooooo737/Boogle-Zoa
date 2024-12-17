@@ -1,8 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Media;
-
-
-namespace Boogle_Zoa
+﻿namespace Boogle_Zoa
 {
     public class Program
     {
@@ -47,103 +43,56 @@ namespace Boogle_Zoa
         /// <param name="args">Arguments passés en ligne de commande (non utilisés).</param>
         static void Main(string[] args)
         {
-            // Joue le son de bienvenue.
             display.PlaySoundWelcome();
 
-            // Configure la console (blocage du redimensionnement, dimensions, couleurs).
             display.SetupDisplay();
 
-            // Affiche la fenêtre de bienvenue.
             display.DisplayWelcome();
             
             int type;
 
             do
             {
-                // Affiche le menu principal et retourne le choix de l'utilisateur.
                 type = DisplayMenu();
 
                 if (type == 0)
                 {
-                    // Mode de jeu avec paramètres par défaut.
-                    Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language, display);
-
-                    // Initialise les noms des joueurs.
-                    g.SetNameOfPlayers(display.InitializePlayerName(numberOfPlayer));
-
-                    // Lance le déroulement du jeu.
-                    g.Process();
+                    LaunchGame();
                 }
                 else if (type == 1)
                 {
-                    // Mode de jeu personnalisé, permet de configurer les paramètres avant de lancer le jeu.
                     int selected = 0;
 
                     do
                     {
                         selected = DisplayCustom();
 
-                        switch (selected)
-                        {
-                            case 0:
-                                // Modifie le nombre de joueurs.
-                                numberOfPlayer = display.GetValideNumber("Entrez un nombre de joueurs entre 2 et 5 :", 2, 5);
-                                break;
-
-                            case 1:
-                                // Modifie le temps par manche.
-                                timePerRound = display.GetValideTime("Entrez un temps par manche entre 00:10 et 02:00 :", "00:00:10", "00:02:00");
-                                break;
-
-                            case 2:
-                                // Modifie le nombre de manches.
-                                numberOfRound = display.GetValideNumber("Entrez un nombre de manches entre 1 et 6 :", 1, 6);
-                                break;
-
-                            case 3:
-                                // Modifie la taille du plateau.
-                                sizeOfBoard = display.GetValideNumber("Entrez une taille de matrice entre 3 et 7 :", 3, 7);
-                                break;
-
-                            case 4:
-                                // Modifie la langue.
-                                language = display.GetValideWord("Entrez une langue entre FR et EN :", ["FR", "EN"]);
-                                break;
-
-                            case 5:
-                                // Termine la configuration et lance le jeu.
-                                break;
-                        }
+                        SetOptions(selected);
                     }
                     while (selected != 5);
 
-                    // Crée et lance une nouvelle partie avec les paramètres configurés.
-                    Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language, display);
-
-                    g.SetNameOfPlayers(display.InitializePlayerName(numberOfPlayer));
-                    g.Process();
+                    LaunchGame();
                 }
                 else if (type == 2)
                 {
-                    string[] options = ConsoleDisplay.Themes.Keys.ToArray();
-
-                    int selected = display.Menu(options);
-
-                    ConsoleDisplay.Theme = options[selected];
-                    // Probleme graphique : ???
+                    DisplayThemes();
                 }
 
             } while (type != 3);
 
-            // Quitte l'application avec un message d'au revoir.
             display.DisplayGoodbye();       
         }
 
 
-        static void Mai2(string[] args)
+        /// <summary>
+        /// Initialise et lance une nouvelle partie du jeu avec les paramètres configurés.
+        /// </summary>
+        private static void LaunchGame()
         {
-            WordCloud wc = new WordCloud(new string[] { "BRIMSTONE", "VALORANT", "PHOENIX", "CHAMBER", "RAZE", "JETT", "VI", "UNE", "UN", "MA", "TA", "LA", "UN", "MA", "TA", "LA", "UN", "MA", "TA", "LA" });
-            wc.SaveAndOpenImage("noajune.png");
+            Game g = new Game(numberOfPlayer, timePerRound, numberOfRound, sizeOfBoard, language, display);
+
+            g.SetNameOfPlayers(display.InitializePlayerName(numberOfPlayer));
+            g.Process();
         }
 
 
@@ -155,13 +104,14 @@ namespace Boogle_Zoa
         /// <list type="bullet">
         /// <item><description>0 : Mode NORMAL</description></item>
         /// <item><description>1 : Mode CUSTOM</description></item>
-        /// <item><description>2 : Quitter le programme</description></item>
+        /// <item><description>2 : Accès au THEMES</description></item>
+        /// <item><description>3 : Quitter le programme</description></item>
         /// </list>
         /// </returns>
         /// <remarks>
         /// Cette méthode utilise la fonction <c>Menu</c> pour afficher et gérer les choix.
         /// </remarks>
-        public static int DisplayMenu()
+        private static int DisplayMenu()
         {
             string[] options = { "NORMAL", "CUSTOM", "THEMES", "QUIT" };
 
@@ -188,7 +138,7 @@ namespace Boogle_Zoa
         /// <remarks>
         /// Cette méthode utilise la fonction <c>Menu</c> pour afficher et gérer les choix.
         /// </remarks>
-        public static int DisplayCustom()
+        private static int DisplayCustom()
         {
             string[] options = {
                                 $"NUMBER OF PLAYERS : {numberOfPlayer}",
@@ -202,6 +152,76 @@ namespace Boogle_Zoa
             int selected = display.Menu(options);
 
             return selected;
+        }
+
+
+        /// <summary>
+        /// Affiche la fenêtre pour modifier une option spécifique du jeu en fonction de l'entrée donnée.
+        /// </summary>
+        /// <param name="option">Option à modifier.</param>
+        /// <remarks>
+        /// <list type="bullet">
+        /// <item><description><c>0</c> : Modifier le nombre de joueurs.</description></item>
+        /// <item><description><c>1</c> : Modifier le temps par manche.</description></item>
+        /// <item><description><c>2</c> : Modifier le nombre de manches.</description></item>
+        /// <item><description><c>3</c> : Modifier la taille du plateau.</description></item>
+        /// <item><description><c>4</c> : Modifier la langue (FR ou EN).</description></item>
+        /// <item><description><c>5</c> : Terminer la configuration et lancer le jeu.</description></item>
+        /// </list>
+        /// </remarks>
+        private static void SetOptions(int option)
+        {
+            switch (option)
+            {
+                case 0:
+                    numberOfPlayer = display.GetValideNumber("Entrez un nombre de joueurs entre 2 et 5 :", 2, 5);
+                    break;
+
+                case 1:
+                    timePerRound = display.GetValideTime("Entrez un temps par manche entre 00:10 et 02:00 :", "00:00:10", "00:02:00");
+                    break;
+
+                case 2:
+                    numberOfRound = display.GetValideNumber("Entrez un nombre de manches entre 1 et 6 :", 1, 6);
+                    break;
+
+                case 3:
+                    sizeOfBoard = display.GetValideNumber("Entrez une taille de matrice entre 3 et 7 :", 3, 7);
+                    break;
+
+                case 4:
+                    language = display.GetValideWord("Entrez une langue entre FR et EN :", ["FR", "EN"]);
+                    break;
+
+                case 5:
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// Affiche la fenêtre de personnalisation du thème du jeu avec plusieurs options et permet à l'utilisateur de choisir ce qu'il veut modifier.
+        /// </summary>
+        /// <returns>
+        /// Un entier représentant le thème sélectionné par l'utilisateur :
+        /// <list type="bullet">
+        /// <item><description>0 : Thème EGYPT</description></item>
+        /// <item><description>1 : Thème DARK</description></item>
+        /// <item><description>2 : Thème LIGHT</description></item>
+        /// <item><description>3 : Thème ARCANE</description></item>
+        /// </list>
+        /// </returns>
+        /// <remarks>
+        /// Cette méthode utilise la fonction <c>Menu</c> pour afficher et gérer les choix.
+        /// </remarks>
+        /// Problème : Bug Graphique
+        private static void DisplayThemes()
+        {
+            string[] options = ConsoleDisplay.Themes.Keys.ToArray();
+
+            int selected = display.Menu(options);
+
+            ConsoleDisplay.Theme = options[selected];
         }
     }
 }

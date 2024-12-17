@@ -157,7 +157,7 @@ namespace Boogle_Zoa
             DisplayCentered(" | __ )   / _ \\   / _ \\   / ___| | |     | ____|   |__  /  / _ \\    / \\   ");
             DisplayCentered(" |  _ \\  | | | | | | | | | |  _  | |     |  _|       / /  | | | |  / _ \\  ");
             DisplayCentered(" | |_) | | |_| | | |_| | | |_| | | |___  | |___     / /_  | |_| | / ___ \\ ");
-            DisplayCentered(" |____/   \\___/   \\___/   \\____| |_____| |_____|   /____|  \\___/ /_/   \\_\\"); //74
+            DisplayCentered(" |____/   \\___/   \\___/   \\____| |_____| |_____|   /____|  \\___/ /_/   \\_\\");
             DisplayCentered("", 3);
             DisplayCentered("Press Enter to start !");
             DisplayCentered("", 3);
@@ -501,7 +501,7 @@ namespace Boogle_Zoa
         /// </summary>
         public void PlaySoundWelcome()
         {
-            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/Music_Intro.wav");
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/data/music/Music_Intro.wav");
             sound.Play();
         }
 
@@ -511,7 +511,7 @@ namespace Boogle_Zoa
         /// </summary>
         public void PlaySoundButton1()
         {
-            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/SoundEffect_Button1.wav");
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/data/music/SoundEffect_Button1.wav");
             sound.Play();
         }
 
@@ -521,7 +521,7 @@ namespace Boogle_Zoa
         /// </summary>
         public void PlaySoundButton2()
         {
-            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/ressource/music/SoundEffect_Button2.wav");
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/data/music/SoundEffect_Button2.wav");
             sound.Play();
         }
     }

@@ -4,48 +4,38 @@
     {
         private int numberOfPlayers;
         private TimeSpan timePerRound;
-        private int numberOfRound;
+        private int numberOfRounds;
         private int sizeOfBoard;
         private string language;
         private DictionaryWords dictionaryWords;
 
         private Player[] players;
 
-        private static readonly Dictionary<char, (int, int)> lettersInformation;
+        private static Dictionary<char, (int, int)> lettersInformation;
 
         private Random random;
 
-        private IDisplay _display;
+        private IDisplay display;
 
 
-
-        static Game()
-        {
-            lettersInformation = new Dictionary<char, (int, int)> { };
-            string[] lines = File.ReadAllLines( "../../../data/Lettres.txt");
-            for (int l = 0; l < lines.Length; l++)
-            {
-                string[] information = lines[l].Split(';');
-                lettersInformation.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));
-            }
-        }
-
-
-        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRound, int sizeOfBoard, string language, IDisplay display)
+        public Game(int numberOfPlayers, TimeSpan timePerRound, int numberOfRounds, int sizeOfBoard, string language, IDisplay display)
         {
             this.numberOfPlayers = numberOfPlayers;
             this.timePerRound = timePerRound;
-            this.numberOfRound = numberOfRound;
+            this.numberOfRounds = numberOfRounds;
             this.sizeOfBoard = sizeOfBoard;
             this.language = language;
 
             dictionaryWords = new DictionaryWords(language);
+            ReadLettersInformation(language);
+
+            AdjustLetterStocks();
+            Dice.ResetUsedLetters();
 
             players = new Player[numberOfPlayers];
 
             random = new Random();
-
-            _display = display;
+            this.display = display;
         }
 
 
@@ -67,7 +57,7 @@
             DateTime startTime;
             DateTime endTime;
 
-            for (int r = 0; r < numberOfRound; r++)
+            for (int r = 0; r < numberOfRounds; r++)
             {
 
                 for (int p = 0; p < numberOfPlayers; p++)
@@ -77,7 +67,7 @@
                     endTime = startTime + duration;
 
                     Board board = CreateBoard();
-                    _display.DisplayGame(r, players[p].Name, board);
+                    display.DisplayGame(r, players[p].Name, board);
 
                     while (DateTime.Now < endTime)
                     {
@@ -85,7 +75,7 @@
 
                         while (true)
                         {
-                            word = _display.GetWord();
+                            word = display.GetWord();
                             if(word != "")
                             {
                                 break;
@@ -95,11 +85,11 @@
                         if (board.GameBoardTest(word, dictionaryWords))
                         {
                             players[p].AddWord(word, lettersInformation);
-                            _display.DisplayMessage($" The word is valid! Your score is now at {players[p].Score} points!");
+                            display.DisplayMessage($" The word is valid! Your score is now at {players[p].Score} points!");
                         }
                         else
                         {
-                            _display.DisplayMessage(" The word is unvalid... Try again !");
+                            display.DisplayMessage(" The word is unvalid... Try again !");
                         }
                     }
                 }
@@ -119,7 +109,31 @@
 
             GenerateWordCloud(winner);
 
-            _display.DisplayWinner(winner);
+            display.DisplayWinner(winner);
+        }
+
+
+        public void AdjustLetterStocks()
+        {
+            // Calcule le stock total nécessaire
+            int totalStock = sizeOfBoard * sizeOfBoard * numberOfPlayers * numberOfRounds;
+
+            // Calcule le stock actuel
+            int currentStock = 0;
+            foreach ((int, int) info in lettersInformation.Values)
+            {
+                currentStock += info.Item2;
+            }
+
+            // Calcule le facteur d'ajustement
+            double adjustmentFactor = (double)totalStock / currentStock;
+
+            // Ajuste les stocks proportionnellement
+            foreach (char letter in lettersInformation.Keys)
+            {
+                (int, int) info = (lettersInformation[letter].Item1, (int)Math.Round(lettersInformation[letter].Item2 * adjustmentFactor)+1);
+                lettersInformation[letter] = info;
+            }
         }
 
 
@@ -141,7 +155,50 @@
         private void GenerateWordCloud(Player player)
         {
             WordCloud wordCloud = new WordCloud(player.WordsFound.ToArray());
-            wordCloud.SaveAndOpenImage(player.Name + ".png");
+            wordCloud.SaveAndOpenImage("WordCloud_" + player.Name + ".png");
+        }
+
+
+        private void ReadLettersInformation(string language)
+        {
+            lettersInformation = new Dictionary<char, (int, int)> { };
+            string filepath;
+
+            if (language == "FR")
+            {
+                filepath = "../../../data/LettresFR.txt";
+            }
+            else
+            {
+                filepath = "../../../data/LettresEN.txt";
+            }
+
+            StreamReader sReader = null;
+
+            try
+            {
+                sReader = new StreamReader(filepath);
+
+                string line;
+
+                while ((line = sReader.ReadLine()) != null) // Lire chaque ligne jusqu'à la fin du fichier
+                {
+                    string[] information = line.Split(';');
+                    lettersInformation.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                if (sReader != null) { sReader.Close(); }
+            }
         }
     }
 }

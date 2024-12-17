@@ -5,10 +5,24 @@
     /// </summary>
     public class DictionaryWords
     {
+        /// <summary>
+        /// Liste contenant tous les mots du dictionnaire.
+        /// </summary>
         private List<string> words;
+
+        /// <summary>
+        /// Langue du dictionnaire représentée par un code (par exemple, "FR" pour français, "EN" pour anglais).
+        /// </summary>
         private string language;
 
+        /// <summary>
+        /// Dictionnaire associant chaque taille de mot (int) à une liste de mots correspondant à cette taille.
+        /// </summary>
         private Dictionary<int, List<string>> wordsBySize = new Dictionary<int, List<string>> { };
+
+        /// <summary>
+        /// Dictionnaire associant chaque lettre (char) à une liste de mots qui commencent par cette lettre.
+        /// </summary>
         private Dictionary<char, List<string>> wordsByLetter = new Dictionary<char, List<string>> { };
 
 
@@ -26,33 +40,8 @@
         public DictionaryWords(string language)
         {
             this.language = language;
-            string filePath="";
 
-            if(language == "FR")
-            {
-                filePath = "../../../data/MotsPossiblesFR.txt";
-            }
-            else if (language == "EN")
-            {
-                filePath = "../../../data/MotsPossiblesEN.txt";
-            }
-            else
-            {
-                filePath = "../../../../Boogle Zoa/data/TestWords.txt";
-            }
-
-
-            try
-            {
-                string content = File.ReadAllText(filePath);
-                words = new List<string>(content.Split(' '));
-            }
-            catch(FileNotFoundException f)
-            {
-                words = [];
-                Console.WriteLine("Le fichier n'existe pas " + f.Message);
-                return;
-            }
+            ReadDictionnary(language);
 
             int n;
             char c;
@@ -113,76 +102,35 @@
 
 
         /// <summary>
-        /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri à bulles.
+        /// Lit un fichier dictionnaire contenant une liste de mots, en fonction de la langue spécifiée.
         /// </summary>
-        /// <param name="list">Liste de mots à trier.</param>
-        /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir une complexité de O(n) dans le meilleur des cas, et une complexité de O(n²) dans le pire des cas.
-        /// Optimisation de la Complexité --> Dans un tri à bulles, après chaque passe, les derniers éléments sont déjà triés. Nous avons bien diminué la taille de la boucle avec n--, pour réduire la longueur des parcours.
-        /// Optimisation de la Mémoire --> Nous avons intialisé la variable "temp" en dehors des boucles, pour réduire l'allocation de la mémoire à 1 case. 
-        public static void BubbleSort(List<string> list)
+        private void ReadDictionnary(string language)
         {
-            int n = list.Count;
-            bool swapped;
-            string temp;
+            string filePath;
 
-            do
+            if (language == "FR")
             {
-                swapped = false;
-                for (int i = 0; i < n - 1; i++)
-                {
-                    if (string.Compare(list[i], list[i + 1]) > 0)
-                    {
-                        temp = list[i];
-                        list[i] = list[i + 1];
-                        list[i + 1] = temp;
-                        swapped = true;
-                    }
-                    Console.WriteLine(list[i]);
-
-                }
-                n--;
-            } while (swapped);
-        }
-
-
-        /// <summary>
-        /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri rapide.
-        /// </summary>
-        /// <param name="list">Liste de mots à trier.</param>
-        /// <param name="start">Index de début.</param>
-        /// <param name="end">INdex de fin.</param>
-        /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
-        /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
-        public static void QuickSort(List<string> list, int start, int end)
-        {
-            if (end - start < 1) return;
-
-            string pivot = list[end];
-            int wall = start;
-            int current = start;
-            string temp;
-
-            while (current < end)
+                filePath = "../../../data/MotsPossiblesFR.txt";
+            }
+            else if (language == "EN")
             {
-                if (string.Compare(list[current], pivot) < 0)
-                {
-                    if (wall != current)
-                    {
-                        temp = list[current];
-                        list[current] = list[wall];
-                        list[wall] = temp;
-                    }
-                    wall++;
-                }
-                current++;
+                filePath = "../../../data/MotsPossiblesEN.txt";
+            }
+            else
+            {
+                filePath = "../../../../Boogle Zoa/data/data test/TestWords.txt";
             }
 
-            string tmpPivot = list[wall];
-            list[wall] = list[end];
-            list[end] = tmpPivot;
-
-            QuickSort(list, start, wall - 1);
-            QuickSort(list, wall + 1, end);
+            try
+            {
+                string content = File.ReadAllText(filePath);
+                words = new List<string>(content.Split(' '));
+            }
+            catch (FileNotFoundException f)
+            {
+                words = [];
+                Console.WriteLine("Le fichier n'existe pas " + f.Message);
+            }
         }
 
 
@@ -279,42 +227,6 @@
 
 
         /// <summary>
-        /// Réalise une recherche dichotomique pour trouver un mot (<paramref name="mot"/>) dans une liste de mot (<paramref name="list"/>).
-        /// </summary>
-        /// <param name="mot">Mot à trouver.</param>
-        /// <param name="list">Liste dans laquelle on cherche le mot.</param>
-        /// <param name="min">Indice délimitant la borne inférieure.</param>
-        /// <param name="max">Indice délimitant la borne supérieure.</param>
-        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
-        /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
-        /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.
-        public static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
-        {
-            if (min > max || list == null || list.Count == 0)
-            {
-                return false;
-            }
-
-            int mid = (min + max) / 2;
-
-            int comparaison = string.Compare(word, list[mid]);
-
-            if (comparaison == 0)
-            {
-                return true;
-            }
-            else if (comparaison < 0)
-            {
-                return RecursiveBinarySearch(word, list, min, mid - 1);
-            }
-            else
-            {
-                return RecursiveBinarySearch(word, list, mid + 1, max);
-            }
-        }
-
-
-        /// <summary>
         /// Renvoie une chaîne de caractère <c>string</c> qui décrit un dictionnaire par sa langue (<see cref="language"/>), 
         /// et par le nombre de mots par longueur (<see cref="wordsBySize"/>) et par le nombre de mots par sa première lettre (<see cref="wordsByLetter"/>).
         /// </summary>
@@ -350,6 +262,84 @@
                 }
             }
             return description;
+        }
+
+
+
+        /// <summary>
+        /// Trie une liste de mots (<paramref name="list"/>) par ordre alphabétique, en utilisant la méthode du tri rapide.
+        /// </summary>
+        /// <param name="list">Liste de mots à trier.</param>
+        /// <param name="start">Index de début.</param>
+        /// <param name="end">INdex de fin.</param>
+        /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
+        /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
+        public static void QuickSort(List<string> list, int start, int end)
+        {
+            if (end - start < 1) return;
+
+            string pivot = list[end];
+            int wall = start;
+            int current = start;
+            string temp;
+
+            while (current < end)
+            {
+                if (string.Compare(list[current], pivot) < 0)
+                {
+                    if (wall != current)
+                    {
+                        temp = list[current];
+                        list[current] = list[wall];
+                        list[wall] = temp;
+                    }
+                    wall++;
+                }
+                current++;
+            }
+
+            string tmpPivot = list[wall];
+            list[wall] = list[end];
+            list[end] = tmpPivot;
+
+            QuickSort(list, start, wall - 1);
+            QuickSort(list, wall + 1, end);
+        }
+
+
+        /// <summary>
+        /// Réalise une recherche dichotomique pour trouver un mot (<paramref name="mot"/>) dans une liste de mot (<paramref name="list"/>).
+        /// </summary>
+        /// <param name="mot">Mot à trouver.</param>
+        /// <param name="list">Liste dans laquelle on cherche le mot.</param>
+        /// <param name="min">Indice délimitant la borne inférieure.</param>
+        /// <param name="max">Indice délimitant la borne supérieure.</param>
+        /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
+        /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
+        /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.
+        public static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
+        {
+            if (min > max || list == null || list.Count == 0)
+            {
+                return false;
+            }
+
+            int mid = (min + max) / 2;
+
+            int comparaison = string.Compare(word, list[mid]);
+
+            if (comparaison == 0)
+            {
+                return true;
+            }
+            else if (comparaison < 0)
+            {
+                return RecursiveBinarySearch(word, list, min, mid - 1);
+            }
+            else
+            {
+                return RecursiveBinarySearch(word, list, mid + 1, max);
+            }
         }
     }
 }
