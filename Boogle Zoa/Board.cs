@@ -10,31 +10,31 @@
         /// <summary>
         /// Tableau de dés utilisés pour générer les lettres du plateau.
         /// </summary>
-        private Dice[] dices;
+        private readonly Dice[] dices;
 
         /// <summary>
         /// Tableau des lettres visibles générées par les dés.
         /// Ces lettres forment le contenu du plateau de jeu.
         /// </summary>
-        private char[] visibleLetters;
+        private readonly char[] visibleLetters;
 
         /// <summary>
         /// Grille 2D représentant le plateau de jeu avec les lettres visibles.
         /// Chaque case de la grille contient une lettre.
         /// </summary>
-        private char[,] boardOfLetters;
+        private readonly char[,] boardOfLetters;
 
         /// <summary>
         /// Nombre total de cases sur le plateau.
         /// Cette valeur correspond à la taille totale du plateau de jeu<see cref="boardOfLetters"/>. 
         /// </summary>
-        private int size;
+        private readonly int size;
 
         /// <summary>
         /// Longueur d'un côté de la grille du plateau de jeu.
         /// La grille est de forme carrée, et cette valeur est obtenue en prenant la racine carrée de <see cref="size"/>.
         /// </summary>
-        private int side;
+        private readonly int side;
 
         /// <summary>
         /// Tableau statique représentant les 8 directions possibles pour naviguer dans la grille.

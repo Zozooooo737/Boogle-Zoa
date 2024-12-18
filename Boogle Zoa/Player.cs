@@ -8,7 +8,7 @@
         /// <summary>
         /// Nom du joueur.
         /// </summary>
-        private string name;
+        private readonly string name;
 
         /// <summary>
         /// Score du joueur.
@@ -68,7 +68,7 @@
         /// <returns>
         /// <c>true</c> si le mot est présent dans la liste des mots trouvés par le joueur ; sinon, <c>false</c>.
         /// </returns>
-        public bool Contain(string word)
+        private bool Contain(string word)
         {
             word = word.ToUpper();
             return wordsFound.Contains(word);

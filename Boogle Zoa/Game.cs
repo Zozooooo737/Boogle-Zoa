@@ -75,13 +75,12 @@
                     {
                         string word;
 
-                        while (true)
+                        word = display.GetWord();
+                        
+                        // Ignore si aucun mot n'est saisi.
+                        if (string.IsNullOrWhiteSpace(word))
                         {
-                            word = display.GetWord();
-                            if (word != "")
-                            {
-                                break;
-                            }
+                            continue;
                         }
 
                         int isFound = board.GameBoardTest(word, dictionaryWords);

@@ -8,7 +8,7 @@
         /// <summary>
         /// Tableau contenant les 6 lettres représentant les faces du dé.
         /// </summary>
-        private char[] letters;
+        private readonly char[] letters;
 
         /// <summary>
         /// Lettre actuellement visible sur la face supérieure du dé.
@@ -59,7 +59,7 @@
         /// Crée un dé en fixant comme lettre visible, le caractère (<paramref name="lettersInformation"/>).
         /// </summary>
         /// <param name="visibleLetter">Une lettre.</param>
-        /// Ce constructeur permet de crée un dé en prédifinissant sa lettre visible afin de pouvoir crée des plateaux `Board` pertinent pour ses tests unitaires.
+        /// <remarks>Ce constructeur permet de crée un dé en prédifinissant sa lettre visible afin de pouvoir crée des plateaux `Board` pertinent pour ses tests unitaires.</remarks>
         public Dice(char letter)
         {
             letters = new char[6] { 'A', 'B', 'C', 'D', 'E', letter };

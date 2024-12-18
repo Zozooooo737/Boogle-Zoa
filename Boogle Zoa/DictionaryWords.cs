@@ -8,22 +8,22 @@
         /// <summary>
         /// Liste contenant tous les mots du dictionnaire.
         /// </summary>
-        private List<string> words;
+        private readonly List<string> words;
 
         /// <summary>
         /// Langue du dictionnaire représentée par un code (par exemple, "FR" pour français, "EN" pour anglais).
         /// </summary>
-        private string language;
+        private readonly string language;
 
         /// <summary>
         /// Dictionnaire associant chaque taille de mot (int) à une liste de mots correspondant à cette taille.
         /// </summary>
-        private Dictionary<int, List<string>> wordsBySize = new Dictionary<int, List<string>> { };
+        private readonly Dictionary<int, List<string>> wordsBySize = new Dictionary<int, List<string>> { };
 
         /// <summary>
         /// Dictionnaire associant chaque lettre (char) à une liste de mots qui commencent par cette lettre.
         /// </summary>
-        private Dictionary<char, List<string>> wordsByLetter = new Dictionary<char, List<string>> { };
+        private readonly Dictionary<char, List<string>> wordsByLetter = new Dictionary<char, List<string>> { };
 
 
 
@@ -240,7 +240,7 @@
         /// <param name="end">INdex de fin.</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
-        public static void QuickSort(List<string> list, int start, int end)
+        private static void QuickSort(List<string> list, int start, int end)
         {
             if (end - start < 1) return;
 
@@ -283,7 +283,7 @@
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
         /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.
-        public static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
+        private static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
         {
             if (min > max || list == null || list.Count == 0)
             {
