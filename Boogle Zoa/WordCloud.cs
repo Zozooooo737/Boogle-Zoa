@@ -134,7 +134,7 @@ public class WordCloud
 
     public void SaveAndOpenImage()
     {
-        string filePath = $"..\\..\\..\\wordCloud\\WordCloud_{name}.png";
+        string filePath = $"..\\..\\..\\wordClouds\\WordCloud_{name}.png";
 
         bitmap.Save(filePath, ImageFormat.Png);
         System.Diagnostics.Process.Start("explorer", filePath);

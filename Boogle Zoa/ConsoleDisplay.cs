@@ -507,6 +507,16 @@ namespace Boogle_Zoa
 
 
         /// <summary>
+        /// Joue un son de fin pour l'annonce du gagnant et des nuages de mots.
+        /// </summary>
+        public void PlayEndingSound()
+        {
+            SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/data/music/Music_Outro.wav");
+            sound.Play();
+        }
+
+
+        /// <summary>
         /// Joue un son de transition
         /// </summary>
         public void PlaySoundButton1()

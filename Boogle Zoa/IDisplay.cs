@@ -29,6 +29,8 @@
 
 
         void PlaySoundWelcome();
+
+        void PlayEndingSound();
         void PlaySoundButton1();
         void PlaySoundButton2();
     }

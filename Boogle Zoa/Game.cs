@@ -124,6 +124,7 @@
                 }
             }
 
+            display.PlayEndingSound();
             display.DisplayWinner(winner);
         }
 
