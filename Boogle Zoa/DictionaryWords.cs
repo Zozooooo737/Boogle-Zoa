@@ -240,7 +240,7 @@
         /// <param name="end">INdex de fin.</param>
         /// Optimisation de la Complexité --> Nous avons choisi cette méthode de tri car elle permet d'avoir un temps d'execution incroyablement réduit.
         /// Optimisation de la Mémoire --> Nous avons intialisé la variable `temp` en dehors de la boucle, pour réduire l'allocation de la mémoire à 1 case. 
-        private static void QuickSort(List<string> list, int start, int end)
+        public static void QuickSort(List<string> list, int start, int end)
         {
             if (end - start < 1) return;
 
@@ -283,7 +283,7 @@
         /// <returns><c>true</c> si le mot est présent dans la liste ; sinon, <c>false</c>.</returns>
         /// On vérifie que les paramètres sont bons avant de lancer la recherche récursive. 
         /// Recursive Binary Search = Recherche Dichotomique Recursive : Méthode de classe car elle ne dépends pas d'une instance particulière.
-        private static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
+        public static bool RecursiveBinarySearch(string word, List<string> list, int min, int max)
         {
             if (min > max || list == null || list.Count == 0)
             {

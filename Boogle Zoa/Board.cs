@@ -40,7 +40,7 @@
         /// Tableau statique représentant les 8 directions possibles pour naviguer dans la grille.
         /// Chaque direction est définie par un déplacement en x et en y, permettant d'explorer les cases adjacentes.
         /// </summary>
-        private static readonly (int, int)[] Directions = new (int, int)[]
+        private static readonly (int, int)[] directions = new (int, int)[]
         {
             (-1, -1), (-1, 0), (-1, 1),
             (0, -1),           (0, 1),
@@ -199,7 +199,7 @@
             }
             else
             {
-                foreach (var (dx, dy) in Directions)
+                foreach (var (dx, dy) in directions)
                 {
                     int newX = x + dx;
                     int newY = y + dy;

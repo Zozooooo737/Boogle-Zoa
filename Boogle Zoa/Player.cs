@@ -68,7 +68,7 @@
         /// <returns>
         /// <c>true</c> si le mot est présent dans la liste des mots trouvés par le joueur ; sinon, <c>false</c>.
         /// </returns>
-        private bool Contain(string word)
+        public bool Contain(string word)
         {
             word = word.ToUpper();
             return wordsFound.Contains(word);

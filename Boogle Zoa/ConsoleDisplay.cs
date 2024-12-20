@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Boogle_Zoa
 {
+    /// <summary>
+    /// Classe qui implémente l'interface IDisplay. Elle propose un affichage console.
+    /// </summary>
     public class ConsoleDisplay : IDisplay
     {
         /// <summary>
@@ -64,12 +67,24 @@ namespace Boogle_Zoa
         private static char border = '▓';
 
 
-
+        /// <summary>
+        /// Obtient les thèmes disponibles pour le jeu.
+        /// </summary>
+        /// <remarks>
+        /// Chaque thème est représenté par une paire de couleurs : 
+        /// une couleur de fond (<see cref="ConsoleColor"/>) et une couleur de texte (<see cref="ConsoleColor"/>).
+        /// </remarks>
         public static Dictionary<string, (ConsoleColor Background, ConsoleColor Foreground)> Themes
         {
             get { return themes; }
         }
 
+        /// <summary>
+        /// Définit le thème actuel du jeu.
+        /// </summary>
+        /// <value>
+        /// Le nom du thème à appliquer, correspondant à une clé du dictionnaire <see cref="Themes"/>.
+        /// </value>
         public static string Theme
         {
             set { theme = value; }
@@ -175,8 +190,14 @@ namespace Boogle_Zoa
         }
 
 
+        /// <summary>
+        /// Affiche un écran de fin de partie pour le joueur gagnant.
+        /// </summary>
+        /// <param name="winner">Le joueur gagnant.</param>
         public void DisplayWinner(Player winner)
         {
+            ConsoleKey key;
+
             Console.Clear();
             Console.WriteLine(new string(border, width));
             DisplayCentered("", height / 2 - 3);
@@ -187,8 +208,34 @@ namespace Boogle_Zoa
 
             DisplayCentered("", height/2 - 2);
             Console.Write(new string(border, width));
+
+            do
+            {
+                key = Console.ReadKey(true).Key;
+            }
+            while (key != ConsoleKey.Enter);
+
             Console.ReadKey(false);
             Console.Clear();
+        }
+
+
+        /// <summary>
+        /// Affiche un compte à rebours avant de démarrer une nouvelle manche.
+        /// </summary>
+        public void DisplayCountDown()
+        {
+            Console.Clear();
+            Console.WriteLine(new string(border, width));
+            DisplayCentered("", height - 2);
+            Console.Write(new string(border, width));
+
+            for(int i = 3; i > 0; i--)
+            {
+                Console.SetCursorPosition(0, height/2);
+                DisplayCentered(i.ToString());
+                Thread.Sleep(1000);
+            }
         }
 
 
@@ -495,11 +542,23 @@ namespace Boogle_Zoa
         }
 
 
+        /// <summary>
+        /// Vérifie si une touche a été pressée dans la console, indiquant la disponibilité d'une entrée utilisateur.
+        /// </summary>
+        /// <returns>
+        /// Retourne <c>true</c> si une touche a été pressée dans la console, sinon <c>false</c>.
+        /// </returns>
+        public bool IsWordAvailable()
+        {
+            return Console.KeyAvailable; // Retourne true si une touche a été pressée.
+        }
+
+
 
         /// <summary>
         /// Joue un son d'introduction pour l'écran de bienvenue.
         /// </summary>
-        public void PlaySoundWelcome()
+        public void PlayWelcomeSound()
         {
             SoundPlayer sound = new SoundPlayer("../../../../Boogle Zoa/data/music/Music_Intro.wav");
             sound.Play();

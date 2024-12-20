@@ -31,7 +31,7 @@
         /// <summary>
         /// Instance utilisé pour réaliser l'affichage du Jeu.
         /// </summary>
-        private static IDisplay display = new ConsoleDisplay();
+        private readonly static ConsoleDisplay display = new ConsoleDisplay();
 
 
 
@@ -41,9 +41,9 @@
         /// le menu principal, les paramètres du jeu et l'exécution de la partie.
         /// </summary>
         /// <param name="args">Arguments passés en ligne de commande (non utilisés).</param>
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            display.PlaySoundWelcome();
+            display.PlayWelcomeSound();
 
             display.SetupDisplay();
 

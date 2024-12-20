@@ -233,6 +233,7 @@ namespace Boogle_Zoa_Tests
         {
             // Teste que la lettre visible est bien présente dans l'alphabet
             Dice d = new Dice(random, lettersInformation);
+            d.Roll(random);
             char result = d.VisibleLetter;
 
             Assert.IsTrue(lettersInformation.Keys.Contains(result));
@@ -243,6 +244,7 @@ namespace Boogle_Zoa_Tests
         {
             // Teste que la méthode `Roll` met à jour le compteur de lettres utilisées pour la lettre visible
             Dice d = new Dice(random, lettersInformation);
+            d.Roll(random);
             char letter = d.VisibleLetter;
             int result = Dice.UsedLetters[letter];
 
@@ -295,17 +297,6 @@ namespace Boogle_Zoa_Tests
             {
                 CollectionAssert.AreEqual(testWordsByLetter[key], dico.WordsByLetter[key]);
             }
-        }
-
-        [TestMethod]
-        public void BubbleSort_ShouldSortList()
-        {
-            // Teste que la méthode `BubbleSort` trie la liste de mots en paramètre correctement.
-            List<string> UnsortedList = new List<string>() { "HEXTECH", "PILTOVER", "DEMACIA", "ENFORCER" };
-            List<string> SortedList = new List<string>() { "DEMACIA", "ENFORCER", "HEXTECH", "PILTOVER" };
-            DictionaryWords.BubbleSort(UnsortedList);
-
-            CollectionAssert.AreEqual(SortedList, UnsortedList);
         }
 
         [TestMethod]
@@ -422,7 +413,7 @@ namespace Boogle_Zoa_Tests
             // Teste que la méthode `toString` retourne la description correcte du dictionnaire.
             DictionaryWords dico = new DictionaryWords("");
             string expectedString = "Description du Dictionnaire \n\n" +
-                            "Langue : EN \n\n" +
+                            "Langue :  \n\n" +
                             "Nombre de mots par longueur :\n" +
                             "3 : 1\n" +
                             "4 : 5\n" +
@@ -453,6 +444,38 @@ namespace Boogle_Zoa_Tests
             Assert.AreEqual(expectedString, result);
         }
 
+        [TestMethod]
+        public void QuickSort_ShouldSortList()
+        {
+            // Teste que la méthode `BubbleSort` trie la liste de mots en paramètre correctement.
+            List<string> unsortedList = new List<string>() { "HEXTECH", "PILTOVER", "DEMACIA", "ENFORCER" };
+            List<string> sortedList = new List<string>() { "DEMACIA", "ENFORCER", "HEXTECH", "PILTOVER" };
+            DictionaryWords.QuickSort(unsortedList, 0, unsortedList.Count - 1);
+
+            CollectionAssert.AreEqual(sortedList, unsortedList);
+        }
+
+        [TestMethod]
+        public void RecursiveBinarySearch_ShouldReturnTrue_WhenWordIsFound()
+        {
+            // Teste que la méthode trouve un mot présent dans une liste triée.
+            List<string> sortedList = new List<string>() { "DEMACIA", "ENFORCER", "HEXTECH", "PILTOVER" };
+
+            bool result = DictionaryWords.RecursiveBinarySearch("HEXTECH", sortedList, 0, sortedList.Count - 1);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void RecursiveBinarySearch_ShouldReturnFalse_WhenWordIsNotFound()
+        {
+            // Teste que la méthode retourne false lorsqu'un mot n'est pas dans la liste.
+            List<string> sortedList = new List<string>() { "DEMACIA", "ENFORCER", "HEXTECH", "PILTOVER" };
+
+            bool result = DictionaryWords.RecursiveBinarySearch("NOXUS", sortedList, 0, sortedList.Count - 1);
+
+            Assert.IsFalse(result);
+        }
 
         #endregion
 
@@ -485,23 +508,33 @@ namespace Boogle_Zoa_Tests
         }
 
         [TestMethod]
-        public void GameBoardTest_WordPresent_ReturnTrue()
+        public void GameBoardTest_WordPresent_ReturnZero()
         {
-            // Teste que la méthode `GameBoardTest` renvoie `true` avec un mot présent sur le plateau.
+            // Teste que la méthode `GameBoardTest` renvoie `0` avec un mot présent sur le plateau.
             Board b = new Board(testDices);
-            bool result = b.GameBoardTest("fig", testDictionnary);
+            int result = b.GameBoardTest("fig", testDictionnary);
 
-            Assert.IsTrue(result);
+            Assert.AreEqual(0, result);
         }
 
         [TestMethod]
-        public void GameBoardTest_WordAbsent_ReturnFalse()
+        public void GameBoardTest_WordAbsentInBoard_ReturnOne()
         {
             // Teste que la méthode `GameBoardTest` renvoie `false` avec un mot absent sur le plateau.
             Board b = new Board(testDices);
-            bool result = b.GameBoardTest("LIME", testDictionnary);
+            int result = b.GameBoardTest("LIME", testDictionnary);
 
-            Assert.IsFalse(result);
+            Assert.AreEqual(1, result);
+        }
+
+        [TestMethod]
+        public void GameBoardTest_WordAbsentInDico_ReturnTwo()
+        {
+            // Teste que la méthode `GameBoardTest` renvoie `false` avec un mot absent sur le plateau.
+            Board b = new Board(testDices);
+            int result = b.GameBoardTest("ZSQ", testDictionnary);
+
+            Assert.AreEqual(2, result);
         }
 
         [TestMethod]
