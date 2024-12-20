@@ -550,7 +550,7 @@ namespace Boogle_Zoa
         /// </returns>
         public bool IsWordAvailable()
         {
-            return Console.KeyAvailable; // Retourne true si une touche a été pressée.
+            return Console.KeyAvailable;
         }
 
 

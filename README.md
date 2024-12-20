@@ -1,3 +1,9 @@
 # Boogle Zoa
 
-Document : https://docs.google.com/document/d/1KFDbNB8xl4XThHGkArGpfSp-igu7nOSyJuvGG9O9dzs/edit?usp=sharing
+/!\ Ne pas mettre en pleine écran !
+
+Pour agrandir l'affichage, veuillez zoomer sur la fenêtre à l'aide de "CTRL + Molette" ou "Etirer le pavé tactile".
+
+Développeurs : Noa WAROT et Enzo BOTTURA
+Groupe de TD : TD°G
+Année : A2 - 2024/2025

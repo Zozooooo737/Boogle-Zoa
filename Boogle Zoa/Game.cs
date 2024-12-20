@@ -309,7 +309,7 @@
 
                 string line;
 
-                while ((line = sReader.ReadLine()) != null) // Lire chaque ligne jusqu'à la fin du fichier
+                while ((line = sReader.ReadLine()) != null)
                 {
                     string[] information = line.Split(';');
                     dico.Add(char.Parse(information[0]), (Convert.ToInt32(information[1]), Convert.ToInt32(information[2])));

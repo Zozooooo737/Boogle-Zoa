@@ -135,7 +135,6 @@ public class WordCloud
             int attempts = 0;
             const int maxAttempts = 1000;
 
-            // Réinitialiser les positions initiales pour chaque mot
             double currentAngle = angle;
             double currentRadius = radius;
 
@@ -155,7 +154,6 @@ public class WordCloud
                         break;
                     }
                 }
-
                 if (!overlaps)
                 {
                     DrawCenteredText(words[i], font, colorBrush, x, y);
@@ -164,16 +162,13 @@ public class WordCloud
                 }
                 else
                 {
-                    // Si chevauchement, ajuster l'angle et le rayon
-                    currentAngle += Math.PI / 36;  // Petite augmentation de l'angle
-                    currentRadius += 2;  // Augmentation du rayon pour éloigner le mot
+                    currentAngle += Math.PI / 36;
+                    currentRadius += 2;
                 }
-
                 attempts++;
             }
-
-            angle += Math.PI / 20;  // Augmenter l'angle global pour la spirale
-            radius += 5;  // Augmenter progressivement le rayon général
+            angle += Math.PI / 20;
+            radius += 5;
         }
     }
 
