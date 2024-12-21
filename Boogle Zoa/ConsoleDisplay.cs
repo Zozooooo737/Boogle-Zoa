@@ -157,6 +157,21 @@ namespace Boogle_Zoa
         }
 
 
+        public void DisplayText(string text, bool selected = false)
+        {
+            if (selected)
+            {
+                Console.BackgroundColor = themes[theme].Item2;
+                Console.ForegroundColor = themes[theme].Item1;
+            }
+            Console.Write(text);
+
+            Console.BackgroundColor = themes[theme].Item1;
+            Console.ForegroundColor = themes[theme].Item2;
+        }
+
+
+
 
         /// <summary>
         /// Affiche la fenêtre d'accueil avec un message de bienvenue et un design personnalisé.<br/>
@@ -299,7 +314,7 @@ namespace Boogle_Zoa
         }
 
 
-        public void DisplayGame(int round, string name, Board board)
+        public void DisplayGame(int round, string name)
         {
             Console.Clear();
             Console.Write(new string(border, width));
@@ -307,12 +322,7 @@ namespace Boogle_Zoa
             DisplayCentered(($"\nROUND {round + 1}\n"));
             DisplayCentered(($"Your turn {name} !\n"));
 
-            DisplayCentered("", 3 - board.Side/2);
-            DisplayCentered((board.toString()));
-
-            if (board.Side % 2 == 0) { DisplayCentered(""); }
-
-            DisplayCentered("", 3 - board.Side/2);
+            DisplayCentered("", 8);
 
             DisplayCentered($"Which words can you see ?\n");
 
@@ -321,11 +331,45 @@ namespace Boogle_Zoa
         }
 
 
+        public void DisplayBoard(Board board, List<List<(int, int)>> positions)
+        {
+            int marge = (width - board.Side*2) / 2;
+
+            bool displayed;
+
+            Console.SetCursorPosition(marge, 6);
+
+            for (int y=0; y<board.Side; y++)
+            {
+                for (int x=0; x<board.Side; x++)
+                {
+                    displayed = false;
+
+                    foreach (List<(int, int)> list in positions)
+                    {
+                        if (list.Contains((x, y)) && !displayed)
+                        {
+                            DisplayText(board.BoardOfLetters[x, y].ToString() + " ", true);
+                            displayed = true;
+                        }
+                    }
+                    if (!displayed)
+                    {
+                        DisplayText(board.BoardOfLetters[x, y].ToString() + " ", false);
+                    }
+                }
+                Console.Write("\n" + border + border + new string(' ', marge-2));
+            }
+
+            Console.SetCursorPosition(width / 2 - 3, height - 5);
+        }
+
+
         public string GetWord()
         { 
-            Console.SetCursorPosition(0, height-5);
+            Console.SetCursorPosition(0, height - 5);
             DisplayCentered();
-            Console.SetCursorPosition(width/2-3, height-5);
+            Console.SetCursorPosition(width / 2 - 3, height - 5);
 
             string word = Console.ReadLine();
 
@@ -337,7 +381,7 @@ namespace Boogle_Zoa
         { 
             Console.SetCursorPosition(0, height - 3);
             DisplayCentered(message);
-            Console.SetCursorPosition(width / 2 - 3, height - 4);
+            Console.SetCursorPosition(width / 2 - 3, height - 5);
         }
 
 

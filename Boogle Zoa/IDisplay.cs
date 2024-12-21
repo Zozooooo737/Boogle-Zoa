@@ -18,7 +18,8 @@
 
 
         string[] InitializePlayerName(int numberOfPlayer);
-        void DisplayGame(int round, string name, Board board);
+        void DisplayGame(int round, string name);
+        void DisplayBoard(Board board, List<List<(int, int)>> words);
         string GetWord();
         void DisplayMessage(string message);
 

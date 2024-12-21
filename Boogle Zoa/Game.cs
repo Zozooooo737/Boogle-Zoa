@@ -136,10 +136,14 @@
             DateTime startTime;
             DateTime endTime;
 
-            for (int r = 0; r < numberOfRounds; r++)
+            bool isValid;
+
+            List<List<(int, int)>> positions;
+
+            for (int round = 0; round < numberOfRounds; round++)
             {
 
-                for (int p = 0; p < numberOfPlayers; p++)
+                foreach(Player player in players)
                 {
                     duration = timePerRound;
                     startTime = DateTime.Now;
@@ -148,7 +152,10 @@
                     Board board = CreateBoard();
 
                     display.DisplayCountDown();
-                    display.DisplayGame(r, players[p].Name, board);
+                    display.DisplayGame(round, player.Name);
+
+                    positions = new List<List<(int, int)>>();
+                    display.DisplayBoard(board, positions);
 
                     while (DateTime.Now < endTime)
                     {
@@ -157,60 +164,25 @@
                         if (display.IsWordAvailable())
                         {
                             word = display.GetWord();
-
-                        } 
+                        }
 
                         if (string.IsNullOrWhiteSpace(word))
                         { 
                             continue;
                         }
-                        else if (word.Length < 2)
-                        {
-                            display.DisplayMessage($"The word must be at least 2 letters long.. Try again !");
-                            continue;
-                        }
 
+                        isValid = IsValidWord(word, board, player);
 
-                        int isFound = board.GameBoardTest(word, dictionaryWords);
-
-                        if (isFound == 0)
+                        if (isValid)
                         {
-                            bool isAdded = players[p].AddWord(word, lettersInformation);
-                            
-                            if (isAdded)
-                            {
-                                display.DisplayMessage($"The word is valid! Your score is now at {players[p].Score} points!");
-                            }
-                            else if (!isAdded)
-                            {
-                                display.DisplayMessage($"The word is valid! But you have already found the word... Try again !");
-                            }
-                        }
-                        else if (isFound == 1)
-                        {
-                            display.DisplayMessage("The word is not present on the board... Try again !");
-                        }
-                        else if (isFound == 2)
-                        {
-                            display.DisplayMessage("The word is not present in the dictionary... Try again !");
+                            positions = board.FindAllWordPaths(word);
+                            display.DisplayBoard(board, positions);
                         }
                     }
                 }
             }
 
-            int scoreWinner = 0;
-            Player winner = players[0];
-
-            foreach(Player player in players)
-            {
-                GenerateWordCloud(player);
-
-                if (player.Score > scoreWinner)
-                {
-                    scoreWinner = player.Score;
-                    winner = player;
-                }
-            }
+            Player winner = GetWinnerAndWordClouds();
 
             display.PlayEndingSound();
             display.DisplayWinner(winner);
@@ -238,6 +210,64 @@
             Board board = new Board(dices);
 
             return board;
+        }
+
+
+        private bool IsValidWord(string word, Board board, Player player)
+        {
+            bool result = false;
+
+            if (word.Length < 2)
+            {
+                display.DisplayMessage($"The word must be at least 2 letters long.. Try again !");
+            }
+            else
+            {
+                int isFound = board.GameBoardTest(word, dictionaryWords);
+
+                if (isFound == 0)
+                {
+                    bool isAdded = player.AddWord(word, lettersInformation);
+
+                    if (isAdded)
+                    {
+                        display.DisplayMessage($"The word is valid! Your score is now at {player.Score} points!");
+                        result = true;
+                    }
+                    else if (!isAdded)
+                    {
+                        display.DisplayMessage($"The word is valid! But you have already found the word... Try again !");
+                    }
+                }
+                else if (isFound == 1)
+                {
+                    display.DisplayMessage("The word is not present on the board... Try again !");
+                }
+                else if (isFound == 2)
+                {
+                    display.DisplayMessage("The word is not present in the dictionary... Try again !");
+                }
+            }
+            return result;
+        }
+
+
+        private Player GetWinnerAndWordClouds()
+        {
+            int scoreWinner = 0;
+            Player winner = players[0];
+
+            foreach (Player player in players)
+            {
+                GenerateWordCloud(player);
+
+                if (player.Score > scoreWinner)
+                {
+                    scoreWinner = player.Score;
+                    winner = player;
+                }
+            }
+            return winner;
         }
 
 

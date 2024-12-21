@@ -1,4 +1,6 @@
-﻿namespace Boogle_Zoa
+﻿using System.Linq;
+
+namespace Boogle_Zoa
 {
     /// <summary>
     /// Représente un plateau de jeu 4x4 cases, composé de lettres générées à partir de dés (<see cref="dices"/>). <br/>
@@ -227,6 +229,33 @@
                 description += "\n";
             }
             return description;
+        }
+
+
+        // Voir pour le fusionner avec allpathreturn
+        public static List<int> GetHighlightedIndices(Board board, List<List<(int, int)>> positions)
+        {
+            List<int> highlightedIndices = new List<int>();
+
+            int index = 0;
+
+            for (int x = 0; x < board.side; x++)
+            {
+                for (int y = 0; y < board.side; y++)
+                {
+                    foreach (List<(int, int)> list in positions)
+                    {
+                        if (list.Contains((x, y)) && !highlightedIndices.Contains(index))
+                        {
+                           highlightedIndices.Add(index);
+                            Console.WriteLine(board.toString()[index]);
+                        }
+                    }
+                    index++;
+                }
+            }
+            
+            return highlightedIndices;
         }
     }
 }
